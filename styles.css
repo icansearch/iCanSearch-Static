@@ -1,0 +1,759 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8fafc;
+}
+
+.search-container {
+    background: linear-gradient(135deg, #00a1ff 0%, #0060df 100%);
+}
+
+.search-box {
+    box-shadow: 0 10px 25px -5px rgba(0, 161, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+    box-shadow: 0 20px 25px -5px rgba(0, 161, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.domain-card {
+    transition: all 0.2s ease;
+    border-radius: 12px;
+}
+
+.domain-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.registrar-row {
+    transition: all 0.2s ease;
+    border-radius: 12px;
+}
+
+.registrar-row:hover {
+    background-color: #f1f5f9;
+}
+
+.badge {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+/* Modal Animation */
+.modal-enter {
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+.modal-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 300ms, transform 300ms;
+}
+
+.modal-exit {
+    opacity: 1;
+}
+
+.modal-exit-active {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 300ms, transform 300ms;
+}
+
+/* Placeholder animation */
+@keyframes shimmer {
+    0% {
+        background-position: -468px 0;
+    }
+    100% {
+        background-position: 468px 0;
+    }
+}
+
+.placeholder {
+    animation: shimmer 1.5s infinite linear;
+    background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+    background-size: 800px 104px;
+}
+
+/* Custom styles for a more modern look */
+.custom-shadow {
+    box-shadow: 0 4px 12px rgba(0, 97, 223, 0.15);
+}
+
+.btn-primary {
+    background-color: #00a1ff;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0082cc;
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background-color: #00c389;
+    transition: all 0.2s ease;
+}
+
+.btn-success:hover {
+    background-color: #00a06c;
+    transform: translateY(-1px);
+}
+
+.pills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.pill {
+    padding: 6px 12px;
+    border-radius: 100px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.pill:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Registrar modal styles */
+#registrar-modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    overflow: hidden; /* Prevent background scrolling */
+}
+
+#registrar-modal .bg-white {
+    border-radius: 1rem;
+    max-width: 64rem;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#registrar-modal .p-6 {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* Improve scrolling within the modal */
+#registrar-list {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+/* Make scrollbars nicer */
+#registrar-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+#registrar-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+#registrar-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+}
+
+#registrar-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Make sure the modal content doesn't get cut off */
+.registrar-row {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    #registrar-list {
+        max-height: 60vh;
+    }
+    
+    #registrar-modal .bg-white {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+    }
+}
+
+.filter-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.feature-badge {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    padding: 4px 8px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    display: inline-block;
+}
+
+/* Improved sorting and filtering controls */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+}
+
+.separator {
+    height: 1.5px;
+    background-color: #e5e7eb;
+    margin: 1.5rem 0;
+    width: 100%;
+}
+
+.section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.75rem;
+}
+
+/* Custom styling for domain sections */
+.domain-section {
+    padding-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.domain-section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.75rem;
+}
+
+/* Domain card modifications */
+.user-search-card {
+    border: 2px solid #3b82f6;
+    position: relative;
+}
+
+.user-search-card::before {
+    content: "Your Search";
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background-color: white;
+    padding: 0 8px;
+    font-size: 0.75rem;
+    color: #3b82f6;
+    font-weight: 600;
+}
+
+/* Animations for domain cards */
+.domain-card {
+    transition: all 0.3s ease;
+}
+
+.domain-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Improve modal styling */
+#registrar-modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+#registrar-modal .rounded-2xl {
+    background-color: white;
+    border-radius: 1rem;
+    max-width: 64rem;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Make sure the modal content doesn't cause body scroll issues */
+#registrar-modal .rounded-2xl:focus {
+    outline: none;
+}
+
+#registrar-list > div {
+    transition: all 0.2s ease;
+}
+
+#registrar-list > div:hover {
+    background-color: #f9fafb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Feature tags styling */
+.bg-gray-100.text-gray-700 {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    background-color: #f3f4f6;
+    color: #374151;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    transition: all 0.15s ease;
+}
+
+.bg-gray-100.text-gray-700:hover {
+    background-color: #e5e7eb;
+}
+
+/* Visit button styling */
+.btn-success {
+    background-color: #10b981;
+    color: white;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.btn-success:hover {
+    background-color: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.2);
+}
+
+/* Additional information section styling */
+.bg-blue-50 {
+    border-left: 4px solid #3b82f6;
+}
+
+/* Improved back button */
+.text-blue-500.hover\:text-blue-600 {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.text-blue-500.hover\:text-blue-600:hover {
+    transform: translateX(-2px);
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    #registrar-list > div {
+        padding: 1.25rem;
+    }
+    
+    .btn-success {
+        width: 100%;
+        margin-top: 1rem;
+    }
+}
+/* Ensure the feature tags wrap properly */
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+/* Improve the filter and sort selects */
+select {
+    background-color: white;
+    border-color: #e5e7eb;
+    border-radius: 0.375rem;
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+}
+
+select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+/* Make sure modals come above all other content */
+.z-50 {
+    z-index: 50 !important;
+}
+
+/* Your Search badge styling */
+.domain-card {
+    position: relative;
+}
+
+.domain-card .search-badge {
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    background-color: #3b82f6;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    z-index: 10;
+}
+
+/* Primary domain card styling */
+.domain-card.primary {
+    border: 2px solid #3b82f6;
+    background-color: #f0f7ff;
+}
+
+.domain-card.searched {
+    border: 2px solid #3b82f6;
+}
+
+/* Add more visual distinction between sections */
+.section-header {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.section-header h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.section-divider {
+    height: 2px;
+    background-color: #e5e7eb;
+    margin-bottom: 1.25rem;
+}
+
+/* Alternative domains section styling */
+.alternatives-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+@media (max-width: 640px) {
+    .alternatives-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Improve recommendation badge */
+.recommendation-badge {
+    background-color: #bfdbfe;
+    color: #1e40af;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.recommendation-badge i {
+    margin-right: 0.25rem;
+}
+
+/* Add shadow to the primary domain for emphasis */
+.domain-card.primary {
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+/* Primary domain button styling */
+.primary-button {
+    background-color: #3b82f6;
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.primary-button:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+}
+
+.primary-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+/* Alternative domain button styling */
+.alternative-button {
+    background-color: #60a5fa;
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.alternative-button:hover {
+    background-color: #3b82f6;
+    transform: translateY(-1px);
+}
+
+/* Section headers for search results */
+.your-search-header {
+    color: #1e40af;
+    font-weight: 600;
+    position: relative;
+    padding-left: 1.25rem;
+}
+
+.your-search-header::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 1.25rem;
+    background-color: #3b82f6;
+    border-radius: 2px;
+}
+
+.alternatives-header {
+    color: #4b5563;
+    font-weight: 600;
+    position: relative;
+    padding-left: 1.25rem;
+}
+
+.alternatives-header::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 1.25rem;
+    background-color: #9ca3af;
+    border-radius: 2px;
+}
+
+/* Price display styling */
+.price-tag {
+    font-weight: 600;
+    color: #047857;
+}
+
+/* Unavailable domain styling */
+.unavailable-domain {
+    opacity: 0.75;
+}
+
+.unavailable-badge {
+    display: inline-flex;
+    align-items: center;
+    color: #dc2626;
+    font-size: 0.875rem;
+}
+
+.unavailable-badge i {
+    margin-right: 0.375rem;
+}
+
+/* TLD pills enhancements */
+.pill {
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.pill:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.pill.active {
+    background-color: white;
+    color: #3b82f6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Search results count styling */
+#results-count {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+/* Improved visual hierarchy for domain names */
+.domain-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.domain-base {
+    color: #111827;
+}
+
+.domain-extension {
+    color: #3b82f6;
+}
+
+/* Add a subtle hover effect to all cards */
+.domain-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.domain-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+/* Status indicators */
+.status-available {
+    color: #059669;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.status-available i {
+    margin-right: 0.5rem;
+}
+
+/* Loading animation for availability checking */
+.checking-availability {
+    display: inline-flex;
+    align-items: center;
+    color: #6b7280;
+    font-style: italic;
+}
+
+.checking-availability .dot-pulse {
+    position: relative;
+    left: 8px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #6b7280;
+    animation: dotPulse 1.5s infinite linear;
+}
+
+.checking-availability .dot-pulse::before,
+.checking-availability .dot-pulse::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #6b7280;
+}
+
+.checking-availability .dot-pulse::before {
+    left: -8px;
+    animation: dotPulseBefore 1.5s infinite linear;
+}
+
+.checking-availability .dot-pulse::after {
+    left: 8px;
+    animation: dotPulseAfter 1.5s infinite linear;
+}
+
+@keyframes dotPulse {
+    0% { background-color: #6b7280; }
+    50% { background-color: #e5e7eb; }
+    100% { background-color: #6b7280; }
+}
+
+@keyframes dotPulseBefore {
+    0% { background-color: #e5e7eb; }
+    25% { background-color: #6b7280; }
+    75% { background-color: #e5e7eb; }
+}
+
+@keyframes dotPulseAfter {
+    0% { background-color: #e5e7eb; }
+    25% { background-color: #e5e7eb; }
+    50% { background-color: #6b7280; }
+    100% { background-color: #e5e7eb; }
+}
+
+/* Modal scrolling fix styles */
+body.modal-open {
+    overflow: hidden;
+  }
+  
+  #registrar-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  #registrar-modal .modal-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  /* Improved scrollbar styling */
+  #registrar-list {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+  }
+  
+  #registrar-list::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  #registrar-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  #registrar-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+  
+  #registrar-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    #registrar-modal > div {
+      margin: 0.5rem;
+      max-height: calc(100vh - 1rem);
+    }
+  }

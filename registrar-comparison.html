@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Domain Registrars - iCanSearch</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app" class="min-h-screen flex flex-col">
+        <!-- Header/Navigation -->
+        <header class="bg-white custom-shadow">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <i class="fas fa-search-location text-blue-500 text-2xl"></i>
+                        <h1 class="text-xl font-bold text-gray-800">iCanSearch<span class="text-blue-500">.com</span></h1>
+                    </a>
+                </div>
+                <nav class="hidden md:block">
+                    <ul class="flex space-x-8">
+                        <li><a href="#" class="text-gray-600 hover:text-blue-500 font-medium">Domains</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-500 font-medium">Hosting</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-500 font-medium">About</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-500 font-medium">Contact</a></li>
+                    </ul>
+                </nav>
+                <div>
+                    <button class="btn-primary text-white px-5 py-2 rounded-full font-medium">Login</button>
+                </div>
+                <div class="md:hidden">
+                    <button class="text-gray-600"><i class="fas fa-bars text-xl"></i></button>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Registrar Comparison Section -->
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Compare Domain Registrars</h2>
+                    <div class="flex items-center">
+                        <a href="index.html" class="text-blue-500 hover:text-blue-600 mr-2">
+                            <i class="fas fa-arrow-left mr-1"></i> Back to Search
+                        </a>
+                        <span class="text-gray-400">|</span>
+                        <p class="text-gray-600 ml-2">
+                            Looking for the best deal on <span id="domain-name" class="font-semibold text-blue-600">example.com</span>
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Filter and Sort Controls -->
+                <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
+                    <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div>
+                                <label for="filter-feature" class="block text-sm text-gray-600 mb-1">Filter by Feature</label>
+                                <select id="filter-feature" class="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">All Features</option>
+                                    <option value="Free WHOIS Privacy">Free WHOIS Privacy</option>
+                                    <option value="Free DNS">Free DNS</option>
+                                    <option value="Free SSL">Free SSL</option>
+                                    <option value="Email Forwarding">Email Forwarding</option>
+                                    <option value="Domain Forwarding">Domain Forwarding</option>
+                                    <option value="Domain Lock">Domain Lock</option>
+                                    <option value="Auto Renewal">Auto Renewal</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="sort-registrars" class="block text-sm text-gray-600 mb-1">Sort by</label>
+                            <select id="sort-registrars" class="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="rating-desc">Rating (High to Low)</option>
+                                <option value="rating-asc">Rating (Low to High)</option>
+                                <option value="name-asc">Name (A to Z)</option>
+                                <option value="name-desc">Name (Z to A)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Registrars Table -->
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div id="registrar-list" class="divide-y divide-gray-200">
+                        <!-- Registrar rows will be inserted here by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Additional Information -->
+                <div class="mt-8 bg-blue-50 p-6 rounded-xl">
+                    <h3 class="font-semibold text-lg text-gray-800 mb-3">Additional Information</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fas fa-info-circle text-blue-500 mt-1 mr-2"></i>
+                            <span>Prices shown are typical first-year prices. Renewal prices may vary.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-shield-alt text-blue-500 mt-1 mr-2"></i>
+                            <span>We recommend registrars that offer WHOIS Privacy to protect your personal information.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-sync text-blue-500 mt-1 mr-2"></i>
+                            <span>Consider enabling Auto-Renewal to prevent accidentally losing your domain.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-gray-400 py-16 mt-auto">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                    <div>
+                        <div class="flex items-center space-x-2 mb-6">
+                            <i class="fas fa-search-location text-blue-400 text-2xl"></i>
+                            <h2 class="text-xl font-bold text-white">iCanSearch<span class="text-blue-400">.com</span></h2>
+                        </div>
+                        <p class="text-gray-400 mb-4">The smartest way to find and compare domain names and hosting plans</p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-6">Products</h3>
+                        <ul class="space-y-3">
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Domain Search</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Hosting Comparison</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Domain Transfer</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">SSL Certificates</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-6">Company</h3>
+                        <ul class="space-y-3">
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Careers</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-6">Support</h3>
+                        <ul class="space-y-3">
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Cookie Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-500 mb-4 md:mb-0">© 2025 iCanSearch.com. All rights reserved.</p>
+                    <div class="flex items-center">
+                        <img src="/api/placeholder/120/40" alt="Payment methods" class="h-8" />
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="registrar-comparison.js"></script>
+</body>
+</html>

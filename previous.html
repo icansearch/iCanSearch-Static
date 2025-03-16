@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iCanSearch - Find and Compare Domain Prices Instantly</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        .search-container {
+            background: linear-gradient(135deg, #00a1ff 0%, #0060df 100%);
+        }
+        
+        .search-box {
+            box-shadow: 0 10px 25px -5px rgba(0, 161, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .search-box:focus-within {
+            box-shadow: 0 20px 25px -5px rgba(0, 161, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .domain-card {
+            transition: all 0.2s ease;
+            border-radius: 12px;
+        }
+        
+        .domain-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .registrar-row {
+            transition: all 0.2s ease;
+            border-radius: 12px;
+        }
+        
+        .registrar-row:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .badge {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+        
+        /* Modal Animation */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 300ms, transform 300ms;
+        }
+        
+        .modal-exit {
+            opacity: 1;
+        }
+        
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 300ms, transform 300ms;
+        }
+        
+        /* Placeholder animation */
+        @keyframes shimmer {
+            0% {
+                background-position: -468px 0;
+            }
+            100% {
+                background-position: 468px 0;
+            }
+        }
+        
+        .placeholder {
+            animation: shimmer 1.5s infinite linear;
+            background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+            background-size: 800px 104px;
+        }
+        
+        /* Custom styles for a more modern look */
+        .custom-shadow {
+            box-shadow: 0 4px 12px rgba(0, 97, 223, 0.15);
+        }
+        
+        .btn-primary {
+            background-color: #00a1ff;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0082cc;
+            transform: translateY(-1px);
+        }
+        
+        .btn-success {
+            background-color: #00c389;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-success:hover {
+            background-color: #00a06c;
+            transform: translateY(-1px);
+        }
+        
+        .pills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .pill {
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="min-h-screen flex flex-col">
+        <!-- Header/Navigation -->
+        <header class="bg-white custom-shadow">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-search-location text-blue-500 text-2xl"></i>
+                    <h1 class="text-xl font-bold text-gray-800">iCanSearch<span class="text-blue-500">.com</span></h1>
+                </div>
+                <nav class="hidden md:block">
+                    <ul class="flex space-x-8">
+                        <li><a href="#" class="text-gray-600 hover:text-blue-500 font-medium">Domains</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-500 font-medium">Hosting</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-500 font-medium">About</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-500 font-medium">Contact</a></li>
+                    </ul>
+                </nav>
+                <div>
+                    <button class="btn-primary text-white px-5 py-2 rounded-full font-medium">Login</button>
+                </div>
+                <div class="md:hidden">
+                    <button class="text-gray-600"><i class="fas fa-bars text-xl"></i></button>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Hero/Search Section -->
+        <section class="search-container py-24 text-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4">Find Your Perfect Domain Name</h2>
+                    <p class="text-blue-100 text-lg max-w-2xl mx-auto">Search across all major registrars and find the best deals instantly</p>
+                </div>
+                
+                <div class="max-w-3xl mx-auto">
+                    <div class="search-box bg-white rounded-full p-1 flex items-center">
+                        <div class="relative flex-1">
+                            <input 
+                                type="text" 
+                                id="domain-search" 
+                                placeholder="Type your domain name..." 
+                                class="w-full px-6 py-4 rounded-l-full focus:outline-none text-gray-700"
+                                autocomplete="off"
+                            >
+                            <div id="availability-indicator" class="hidden absolute right-3 top-1/2 transform -translate-y-1/2">
+                                <span id="available-badge" class="hidden badge bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-1"></i> Available
+                                </span>
+                                <span id="unavailable-badge" class="hidden bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full flex items-center">
+                                    <i class="fas fa-times text-red-500 mr-1"></i> Unavailable
+                                </span>
+                            </div>
+                        </div>
+                        <button 
+                            id="search-button" 
+                            class="btn-primary text-white px-8 py-4 rounded-r-full font-medium transition flex items-center"
+                        >
+                            <i class="fas fa-search mr-2"></i> Search
+                        </button>
+                    </div>
+                    
+                    <div class="pills-container justify-center">
+                        <span class="pill bg-white bg-opacity-20 text-white">.com</span>
+                        <span class="pill bg-white bg-opacity-20 text-white">.io</span>
+                        <span class="pill bg-white bg-opacity-20 text-white">.net</span>
+                        <span class="pill bg-white bg-opacity-20 text-white">.org</span>
+                        <span class="pill bg-white bg-opacity-20 text-white">.co</span>
+                        <span class="pill bg-white bg-opacity-20 text-white">.app</span>
+                        <span class="pill bg-white bg-opacity-20 text-white">.dev</span>
+                        <span class="pill bg-white bg-opacity-20 text-white">.ai</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Results Section (initially hidden) -->
+        <section id="results-section" class="py-12 hidden">
+            <div class="container mx-auto px-4">
+                <div class="mb-8">
+                    <h3 class="text-2xl font-semibold text-gray-800">Search Results</h3>
+                    <p class="text-gray-600" id="results-count">Showing available domains for "<span id="search-term">example</span>"</p>
+                </div>
+                
+                <div class="grid grid-cols-1 gap-4" id="domains-container">
+                    <!-- Domain cards will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Modal for domain registrars -->
+        <div id="registrar-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="p-6 border-b">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-2xl font-bold text-gray-800" id="modal-domain-name">example.com</h3>
+                        <button id="close-modal" class="text-gray-400 hover:text-gray-500">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-gray-700 mb-2">Compare Prices</h4>
+                        <p class="text-gray-600 text-sm">Prices shown are for the first year of registration</p>
+                    </div>
+                    
+                    <div class="space-y-4" id="registrars-container">
+                        <!-- Registrar rows will be inserted here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Features Section -->
+        <section class="py-20 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-3">Why Choose iCanSearch?</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">The easiest way to find your perfect domain at the best price</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-2xl custom-shadow text-center">
+                        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-blue-100 text-blue-500 rounded-full">
+                            <i class="fas fa-bolt text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Real-time Results</h3>
+                        <p class="text-gray-600">Check availability as you type and get instant price comparisons</p>
+                    </div>
+                    
+                    <div class="bg-white p-8 rounded-2xl custom-shadow text-center">
+                        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-blue-100 text-blue-500 rounded-full">
+                            <i class="fas fa-percentage text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Save Up to 70%</h3>
+                        <p class="text-gray-600">Compare prices across dozens of registrars to find the best deals</p>
+                    </div>
+                    
+                    <div class="bg-white p-8 rounded-2xl custom-shadow text-center">
+                        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-blue-100 text-blue-500 rounded-full">
+                            <i class="fas fa-server text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Hosting Comparison</h3>
+                        <p class="text-gray-600">Find the perfect hosting plan to match your new domain</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Testimonials Section -->
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-3">What Our Users Say</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Join thousands of satisfied customers who found their perfect domain</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-gray-50 p-8 rounded-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-blue-500 rounded-full text-white flex items-center justify-center mr-4">
+                                <span class="font-bold">JD</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">John Doe</h4>
+                                <p class="text-gray-500 text-sm">Startup Founder</p>
+                            </div>
+                        </div>
+                        <div class="text-yellow-400 mb-3">
+                            ★★★★★
+                        </div>
+                        <p class="text-gray-700">"Found my domain in seconds and saved over $50 compared to what I was about to pay. Highly recommended!"</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-8 rounded-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-green-500 rounded-full text-white flex items-center justify-center mr-4">
+                                <span class="font-bold">SJ</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Sarah Johnson</h4>
+                                <p class="text-gray-500 text-sm">Web Designer</p>
+                            </div>
+                        </div>
+                        <div class="text-yellow-400 mb-3">
+                            ★★★★★
+                        </div>
+                        <p class="text-gray-700">"I use iCanSearch for all my clients now. It's so much faster than checking multiple registrars individually."</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-8 rounded-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-purple-500 rounded-full text-white flex items-center justify-center mr-4">
+                                <span class="font-bold">RM</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Robert Miller</h4>
+                                <p class="text-gray-500 text-sm">E-commerce Owner</p>
+                            </div>
+                        </div>
+                        <div class="text-yellow-400 mb-3">
+                            ★★★★★
+                        </div>
+                        <p class="text-gray-700">"The real-time availability check saved me so much time. I found and purchased the perfect domain in minutes."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <section class="py-20 bg-blue-600 text-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-3xl font-bold mb-6">Ready to find your perfect domain?</h2>
+                <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">Start searching now and discover the best deals across all major domain registrars</p>
+                <button class="bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-full font-bold text-lg transition">
+                    Start Searching
+                </button>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-gray-400 py-16">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                    <div>
+                        <div class="flex items-center space-x-2 mb-6">
+                            <i class="fas fa-search-location text-blue-400 text-2xl"></i>
+                            <h2 class="text-xl font-bold text-white">iCanSearch<span class="text-blue-400">.com</span></h2>
+                        </div>
+                        <p class="text-gray-400 mb-4">The smartest way to find and compare domain names and hosting plans</p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-6">Products</h3>
+                        <ul class="space-y-3">
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Domain Search</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Hosting Comparison</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Domain Transfer</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">SSL Certificates</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-6">Company</h3>
+                        <ul class="space-y-3">
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Careers</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-6">Support</h3>
+                        <ul class="space-y-3">
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Cookie Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-500 mb-4 md:mb-0">© 2025 iCanSearch.com. All rights reserved.</p>
+                    <div class="flex items-center">
+                        <img src="/api/placeholder/120/40" alt="Payment methods" class="h-8" />
+                    </div>
+                </div>
+            </div>
+        </footer>
+        
+        <!-- JavaScript -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // DOM elements
+                const domainSearch = document.getElementById('domain-search');
+                const searchButton = document.getElementById('search-button');
+                const availabilityIndicator = document.getElementById('availability-indicator');
+                const availableBadge = document.getElementById('available-badge');
+                const unavailableBadge = document.getElementById('unavailable-badge');
+                const resultsSection = document.getElementById('results-section');
+                const searchTermSpan = document.getElementById('search-term');
+                const domainsContainer = document.getElementById('domains-container');
+                const registrarModal = document.getElementById('registrar-modal');
+                const modalDomainName = document.getElementById('modal-domain-name');
+                const registrarsContainer = document.getElementById('registrars-container');
+                const closeModal = document.getElementById('close-modal');
+                
+                // TLD list for alternatives
+                const tlds = ['.com', '.net', '.org', '.io', '.co', '.app', '.dev', '.tech', '.site', '.online', '.store', '.blog', '.me', '.ai', '.xyz'];
+                
+                // Mock registrars data
+                const registrars = [
+                    { name: 'NameCheap', logo: 'namecheap.png', price: 8.88, rating: 4.7 },
+                    { name: 'GoDaddy', logo: 'godaddy.png', price: 11.99, rating: 4.2 },
+                    { name: 'Google Domains', logo: 'google.png', price: 12.00, rating: 4.8 },
+                    { name: 'Bluehost', logo: 'bluehost.png', price: 9.99, rating: 4.5 },
+                    { name: 'HostGator', logo: 'hostgator.png', price: 10.95, rating: 4.3 },
+                    { name: 'DreamHost', logo: 'dreamhost.png', price: 7.99, rating: 4.6 },
+                    { name: 'Hostinger', logo: 'hostinger.png', price: 6.99, rating: 4.4 },
+                    { name: 'SiteGround', logo: 'siteground.png', price: 9.95, rating: 4.7 }
+                ];
+                
+                // Typing timer for real-time availability check
+                let typingTimer;
+                const doneTypingInterval = 300; // ms - faster response for better UX
+                
+                // Event listeners
+                domainSearch.addEventListener('keyup', function() {
+                    clearTimeout(typingTimer);
+                    if (domainSearch.value) {
+                        typingTimer = setTimeout(checkAvailabilityWhileTyping, doneTypingInterval);
+                    } else {
+                        availabilityIndicator.classList.add('hidden');
+                    }
+                });
+                
+                searchButton.addEventListener('click', function() {
+                    if (domainSearch.value.trim() !== '') {
+                        performSearch(domainSearch.value.trim());
+                    }
+                });
+                
+                domainSearch.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && domainSearch.value.trim() !== '') {
+                        performSearch(domainSearch.value.trim());
+                    }
+                });
+                
+                closeModal.addEventListener('click', function() {
+                    registrarModal.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                });
+                
+                // Click outside to close modal
+                registrarModal.addEventListener('click', function(e) {
+                    if (e.target === registrarModal) {
+                        registrarModal.classList.add('hidden');
+                        document.body.classList.remove('overflow-hidden');
+                    }
+                });
+                
+                // Check domain availability while typing
+                function checkAvailabilityWhileTyping() {
+                    const domain = domainSearch.value.trim();
+                    if (domain === '') return;
+                    
+                    availabilityIndicator.classList.remove('hidden');
+                    
+                    // Simulate API call with random availability for demo
+                    // In production, this would be a real API call to check availability
+                    const isAvailable = Math.random() > 0.3;
+                    
+                    if (isAvailable) {
+                        availableBadge.classList.remove('hidden');
+                        unavailableBadge.classList.add('hidden');
+                    } else {
+                        availableBadge.classList.add('hidden');
+                        unavailableBadge.classList.remove('hidden');
+                    }
+                }
+                
+                // Perform search for domain and alternatives
+                function performSearch(searchTerm) {
+                    // Clear previous results
+                    domainsContainer.innerHTML = '';
+                    
+                    // Show loading indicators
+                    for (let i = 0; i < 5; i++) {
+                        const loadingCard = document.createElement('div');
+                        loadingCard.className = 'bg-white rounded-2xl shadow-sm p-6 domain-card';
+                        loadingCard.innerHTML = `
+                            <div class="flex justify-between items-center">
+                                <div class="placeholder h-6 w-32 rounded"></div>
+                                <div class="placeholder h-6 w-20 rounded"></div>
+                            </div>
+                            <div class="mt-3">
+                                <div class="placeholder h-4 w-full rounded mt-2"></div>
+                                <div class="placeholder h-4 w-3/4 rounded mt-2"></div>
+                            </div>
+                            <div class="mt-4 flex justify-between items-center">
+                                <div class="placeholder h-5 w-16 rounded"></div>
+                                <div class="placeholder h-10 w-32 rounded-full"></div>
+                            </div>
+                        `;
+                        domainsContainer.appendChild(loadingCard);
+                    }
+                    
+                    // Show results section
+                    resultsSection.classList.remove('hidden');
+                    searchTermSpan.textContent = searchTerm;
+                    
+                    // Simulate API call delay
+                    setTimeout(() => {
+                        // Clear loading indicators
+                        domainsContainer.innerHTML = '';
+                        
+                        // Get base domain name without extension
+                        let baseDomain = searchTerm;
+                        if (baseDomain.includes('.')) {
+                            baseDomain = baseDomain.split('.')[0];
+                        }
+                        
+                        // Add the main domain result
+                        const mainTld = searchTerm.includes('.') ? searchTerm.substring(searchTerm.lastIndexOf('.')) : '.com';
+                        addDomainCard(baseDomain + mainTld, true, true);
+                        
+                        // Add alternative TLDs
+                        let availableCount = 0;
+                        tlds.forEach(tld => {
+                            if (tld !== mainTld) {
+                                // Simulate random availability (more likely to be available)
+                                const isAvailable = Math.random() > 0.3;
+                                if (isAvailable) {
+                                    availableCount++;
+                                    addDomainCard(baseDomain + tld, isAvailable, false);
+                                }
+                                
+                                // Limit to 9 alternatives for cleaner UI
+                                if (availableCount >= 9) return;
+                            }
+                        });
+                        
+                        // Update result count
+                        document.getElementById('results-count').textContent = `Showing ${availableCount + 1} available domains for "${searchTerm}"`;
+                        
+                        // Add click handlers to view buttons
+                        document.querySelectorAll('.view-domain-btn').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                const domainName = this.getAttribute('data-domain');
+                                showRegistrarModal(domainName);
+                            });
+                        });
+                    }, 800);
+                }
+                
+                // Add a domain card to the results
+                function addDomainCard(domain, isAvailable, isMain) {
+                    if (!isAvailable) return;
+                    
+                    const domainParts = domain.split('.');
+                    const name = domainParts[0];
+                    const extension = '.' + domainParts[1];
+                    
+                    // Get starting price (random within range for demo)
+                    const minPrice = 5.99;
+                    const maxPrice = 14.99;
+                    const startingPrice = (Math.random() * (maxPrice - minPrice) + minPrice).toFixed(2);
+                    
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-2xl shadow-sm p-6 domain-card' + (isMain ? ' border-2 border-blue-500' : '');
+                    
+                    let badgeHtml = '';
+                    if (isMain) {
+                        badgeHtml = '<span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Best Match</span>';
+                    }
+                    
+                    card.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xl font-semibold text-gray-800">
+                                <span class="text-gray-800">${name}</span>
+                                <span class="text-blue-500">${extension}</span>
+                            </h4>
+                            ${badgeHtml}
+                        </div>
+                        <p class="text-gray-600 text-sm mt-2">Starting from <span class="text-green-600 font-semibold">${startingPrice}</span> / year</p>
+                        <div class="mt-6 flex justify-between items-center">
+                            <span class="text-green-600 flex items-center">
+                                <i class="fas fa-check-circle mr-1"></i> Available
+                            </span>
+                            <button class="btn-primary text-white px-6 py-2 rounded-full font-medium transition view-domain-btn" data-domain="${domain}">
+                                Compare Prices
+                            </button>
+                        </div>
+                    `;
+                    
+                    domainsContainer.appendChild(card);
+                }
