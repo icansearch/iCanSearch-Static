@@ -9,6 +9,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchTermSpan = document.getElementById('search-term');
     const domainsContainer = document.getElementById('domains-container');
     
+    // Cache for domain availability results
+    const availabilityCache = {};
+    const CACHE_EXPIRY = 60 * 60 * 1000; // 1 hour in milliseconds
+    
+    // RapidAPI configuration for Domainr
+    const RAPIDAPI_KEY = 'ba79451516mshb871d56bed355dep1ef136jsnda991528e579'; // Your RapidAPI key
+    const RAPIDAPI_HOST = 'domainr.p.rapidapi.com';
+    
     // Custom TLD list
     const tlds = ['.in', '.co.in', '.net', '.io', '.ai', '.org', '.info', '.store', '.org.in', '.live'];
     
@@ -41,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Typing timer for real-time availability check
     let typingTimer;
-    const doneTypingInterval = 500; // ms
+    const doneTypingInterval = 1000; // Increased from 500ms to 1000ms to reduce API calls
     
     // Event listeners
     domainSearch.addEventListener('keyup', function() {
@@ -88,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Check domain availability while typing
+    // Check domain availability while typing (single domain status check)
     async function checkAvailabilityWhileTyping() {
         const domain = domainSearch.value.trim();
         if (domain === '') return;
@@ -99,7 +107,13 @@ document.addEventListener('DOMContentLoaded', function() {
         unavailableBadge.classList.add('hidden');
         
         try {
-            const isAvailable = await checkDomainAvailability(domain);
+            // Use Domainr API for the status check
+            let domainToCheck = domain;
+            if (!domainToCheck.includes('.')) {
+                domainToCheck = domainToCheck + '.com'; // Add default TLD if none provided
+            }
+            
+            const isAvailable = await checkDomainStatus(domainToCheck);
             
             if (isAvailable) {
                 availableBadge.classList.remove('hidden');
@@ -115,17 +129,70 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Check domain availability using Cloudflare DNS API
-    async function checkDomainAvailability(domain) {
-        // Make sure we have a proper domain format
-        if (!domain.includes('.')) {
-            domain = domain + '.com'; // Add default TLD if none provided
+    // Check domain status using Domainr via RapidAPI
+    async function checkDomainStatus(domain) {
+        // Normalize domain to lowercase for consistent cache keys
+        const normalizedDomain = domain.toLowerCase();
+        
+        // Check if we have a non-expired cache entry
+        if (availabilityCache[normalizedDomain] && 
+            (Date.now() - availabilityCache[normalizedDomain].timestamp) < CACHE_EXPIRY) {
+            console.log(`Using cached result for ${normalizedDomain}`);
+            return availabilityCache[normalizedDomain].available;
+        }
+        
+        try {
+            const response = await fetch(`https://${RAPIDAPI_HOST}/v2/status?domain=${normalizedDomain}`, {
+                method: 'GET',
+                headers: {
+                    'X-RapidAPI-Key': RAPIDAPI_KEY,
+                    'X-RapidAPI-Host': RAPIDAPI_HOST
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`API request failed with status ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (data.status && data.status.length > 0) {
+                // Check the status of the domain
+                // Possible status values: available, inactive, active, unavailable, parked, etc.
+                const isAvailable = data.status[0].status === 'available' || data.status[0].status === 'inactive';
+                
+                // Save result in cache
+                availabilityCache[normalizedDomain] = {
+                    available: isAvailable,
+                    timestamp: Date.now()
+                };
+                
+                return isAvailable;
+            }
+            
+            return false;
+        } catch (error) {
+            console.error('Error checking domain status with Domainr:', error);
+            // Fallback to a simulated check (for demo/development purposes)
+            return Math.random() > 0.5;
+        }
+    }
+    
+    // Check domain availability using Cloudflare DNS API (free)
+    async function checkDomainAvailabilityCloudflare(domain) {
+        // Normalize domain to lowercase for consistent cache keys
+        const normalizedDomain = domain.toLowerCase();
+        
+        // Check if we have a non-expired cache entry
+        if (availabilityCache[normalizedDomain] && 
+            (Date.now() - availabilityCache[normalizedDomain].timestamp) < CACHE_EXPIRY) {
+            console.log(`Using cached result for ${normalizedDomain}`);
+            return availabilityCache[normalizedDomain].available;
         }
         
         try {
             // Use DNS lookup to check if the domain exists
-            // This is a simplified approach - a more robust solution would use a dedicated domain API
-            const response = await fetch(`https://cloudflare-dns.com/dns-query?name=${domain}&type=A`, {
+            const response = await fetch(`https://cloudflare-dns.com/dns-query?name=${normalizedDomain}&type=A`, {
                 headers: {
                     'Accept': 'application/dns-json'
                 }
@@ -134,14 +201,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
             
             // If there's no answer or NXDOMAIN status, domain might be available
-            if (data.Status === 3 || !data.Answer || data.Answer.length === 0) {
-                return true; // Domain might be available
-            } else {
-                return false; // Domain is taken
-            }
+            const isAvailable = data.Status === 3 || !data.Answer || data.Answer.length === 0;
+            
+            // Save result in cache
+            availabilityCache[normalizedDomain] = {
+                available: isAvailable,
+                timestamp: Date.now()
+            };
+            
+            return isAvailable;
         } catch (error) {
-            console.error('Error checking domain availability:', error);
-            // In case of error, use a fallback method (for demo purposes)
+            console.error('Error checking domain availability with Cloudflare:', error);
+            // In case of error, use a fallback method
             return Math.random() > 0.5; // Random availability for failover
         }
     }
@@ -177,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
         searchTermSpan.textContent = searchTerm;
         resultsSection.scrollIntoView({ behavior: 'smooth' });
         
-        // Get base domain name without extension
+        // Parse the search term
         let baseDomain = searchTerm;
         let providedTld = '.com'; // Default
         let userProvidedFullDomain = false;
@@ -189,9 +260,12 @@ document.addEventListener('DOMContentLoaded', function() {
             userProvidedFullDomain = true;
         }
         
-        // Start by checking the main domain
-        const mainDomain = baseDomain + providedTld;
-        const mainDomainAvailable = await checkDomainAvailability(mainDomain);
+        // Define the main domain
+        const mainDomain = userProvidedFullDomain ? 
+            searchTerm : baseDomain + providedTld;
+        
+        // Check main domain with Domainr (accurate API)
+        const mainDomainAvailable = await checkDomainStatus(mainDomain);
         
         // Clear loading indicators
         domainsContainer.innerHTML = '';
@@ -238,30 +312,28 @@ document.addEventListener('DOMContentLoaded', function() {
             domainsContainer.appendChild(alternativesHeader);
         }
         
+        // Check alternative domains with Cloudflare (free)
+        const alternativeTLDs = tlds.filter(tld => 
+            tld.toLowerCase() !== providedTld.toLowerCase());
+        
         // Keep track of available alternatives
         let availableCount = 0;
         
-        // Check all TLDs in parallel
-        const checks = tlds.map(async (tld) => {
-            // Skip if this is the same TLD the user already searched for
-            // This prevents duplication in the alternatives list
-            if (tld.toLowerCase() === providedTld.toLowerCase()) {
-                return null;
-            }
-            
+        // Process alternatives in parallel
+        const alternativeChecks = alternativeTLDs.map(async (tld) => {
             const domain = baseDomain + tld;
-            const isAvailable = await checkDomainAvailability(domain);
+            const isAvailable = await checkDomainAvailabilityCloudflare(domain);
             
             if (isAvailable) {
                 availableCount++;
                 addDomainCard(domain, true, false, "alternative");
             }
             
-            return null;
+            return isAvailable ? domain : null;
         });
         
         // Wait for all checks to complete
-        await Promise.all(checks);
+        await Promise.all(alternativeChecks);
         
         // Update result count
         const totalAvailable = availableCount + (mainDomainAvailable ? 1 : 0);
@@ -284,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const extension = '.' + domainParts.slice(1).join('.');
         
         // Get starting price for this TLD from our ranges
-        const priceRange = tldPriceRanges[extension] || tldPriceRanges['.com'];
+        const priceRange = tldPriceRanges[extension.toLowerCase()] || tldPriceRanges['.com'];
         const startingPrice = (Math.random() * (priceRange.max - priceRange.min) + priceRange.min).toFixed(2);
         
         const card = document.createElement('div');
@@ -377,10 +449,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         return stars;
     }
-    
-    // Initialize with a sample domain
-    domainSearch.value = 'icansearch';
-    checkAvailabilityWhileTyping();
     
     // Update the TLD pills to match our custom list
     const pillsContainer = document.querySelector('.pills-container');
