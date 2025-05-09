@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iCanSearch - Find Your Perfect Domain</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0071e3;
+            --secondary-color: #1d1d1f;
+            --success-color: #2fd565;
+            --error-color: #ff3b30;
+            --warning-color: #ff9500; /* For premium/marketed */
+            --background-color: #fbfbfd;
+            --card-background: #ffffff;
+            --text-color: #1d1d1f;
+            --text-secondary: #86868b;
+            --border-radius: 16px;
+            --transition-speed: 0.3s;
+            --section-padding: 80px 20px; /* Standardized section padding */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        .hero {
+            position: relative;
+            min-height: 90vh; /* Adjusted slightly */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 20px 60px; /* Increased top padding due to fixed navbar */
+            background: linear-gradient(135deg, #fbfbfd 0%, #f5f5f7 100%);
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(173, 216, 230, 0.08) 0%, rgba(173, 216, 230, 0) 70%);
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            width: 100%;
+            max-width: 900px;
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000; /* Ensure navbar is on top */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #007AFF, #5AC8FA);
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo span {
+            color: var(--text-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color var(--transition-speed) ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .hero-title {
+            font-size: 64px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: 24px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .search-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+        
+        .search-box {
+            display: flex;
+            background-color: var(--card-background);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            position: relative;
+        }
+        
+        .search-box:hover, .search-box:focus-within {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 20px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 20px 20px 20px 60px;
+            border: none;
+            font-size: 18px;
+            outline: none;
+            background: transparent;
+        }
+        
+        .search-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 40px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease;
+            letter-spacing: -0.3px;
+        }
+        
+        .search-button:hover {
+            background-color: #0077ED;
+        }
+        
+        .examples {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 60px;
+        }
+        
+        .examples span {
+            display: inline-block;
+            margin: 0 8px;
+            cursor: pointer;
+            transition: color var(--transition-speed) ease;
+        }
+        
+        .examples span:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        
+        .decorative-circles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(84, 58, 183, 0.03) 0%, rgba(0, 172, 193, 0.03) 100%);
+        }
+        
+        .circle-1 { width: 600px; height: 600px; top: -200px; right: -100px; }
+        .circle-2 { width: 400px; height: 400px; bottom: -100px; left: -100px; }
+        .circle-3 { width: 300px; height: 300px; top: 40%; right: 20%; }
+
+        /* Generic Section Styling */
+        .content-section {
+            padding: var(--section-padding);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            text-align: center;
+        }
+        .section-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 60px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+        
+        /* Search Results Section - REVAMPED */
+        .search-results-wrapper { /* New outer wrapper for full width background */
+            background-color: var(--background-color); /* Match page background for seamless feel */
+            padding: 60px 0; /* Padding for the content within */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            display: none; /* Initially hidden */
+        }
+        .search-results-wrapper.visible {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+        .search-results-container { /* Inner container for max-width content */
+            max-width: 900px; 
+            margin: 0 auto;
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+        }
+        .result-main-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .result-main-header h2 {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .result-main-header h2 .searched-domain-emphasis {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .domain-status-primary {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            background-color: #f9f9f9; /* Light bg for primary status box */
+        }
+        .domain-status-primary.available { border-left: 5px solid var(--success-color); }
+        .domain-status-primary.unavailable { border-left: 5px solid var(--error-color); }
+        .domain-status-primary.premium { border-left: 5px solid var(--warning-color); }
+
+        .status-icon-large { font-size: 50px; margin-bottom: 15px; }
+        .available .status-icon-large { color: var(--success-color); }
+        .unavailable .status-icon-large { color: var(--error-color); }
+        .premium .status-icon-large { color: var(--warning-color); }
+
+        .domain-name-display { font-size: 36px; font-weight: 700; margin-bottom: 10px; letter-spacing: -1px; word-break: break-all; }
+        .status-text-prominent { font-size: 24px; font-weight: 600; margin-bottom: 15px; }
+        .available .status-text-prominent { color: var(--success-color); }
+        .unavailable .status-text-prominent { color: var(--error-color); }
+        .premium .status-text-prominent { color: var(--warning-color); }
+
+        .status-details-group { margin-top: 20px; }
+        .status-detail-label { font-weight: 600; color: var(--text-color); display: block; margin-bottom: 5px; font-size: 16px; }
+        .status-detail-value { font-size: 15px; color: var(--text-secondary); margin-bottom: 15px; line-height: 1.5; }
+        .status-detail-value code { background-color: #e8e8e8; padding: 3px 6px; border-radius: 4px; font-size: 0.9em; color: #555; }
+
+        .results-section-heading { font-size: 24px; font-weight: 600; margin-bottom: 25px; text-align: left; color: var(--text-color); padding-top: 20px; border-top: 1px solid #f0f0f0; margin-top: 30px;}
+        .results-section-heading:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
+
+        .registrars-list-vertical { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
+        .registrar-item {
+            background-color: #f8f8f8;
+            border-radius: 12px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all var(--transition-speed) ease;
+        }
+        .registrar-item:hover { background-color: #f0f0f0; transform: translateX(5px); }
+        .registrar-item-logo { height: 40px; width: auto; max-width: 100px; margin-right: 15px; object-fit: contain; }
+        .registrar-item-info { flex-grow: 1; }
+        .registrar-item-name { font-weight: 500; font-size: 16px; color: var(--text-color); }
+        .registrar-item-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color var(--transition-speed) ease;
+            white-space: nowrap;
+        }
+        .registrar-item-button:hover { background-color: #0077ED; }
+        
+        .whois-lookup-container { text-align: center; margin: 20px 0; font-size: 14px; }
+        .whois-lookup-container a { color: var(--primary-color); text-decoration: none; font-weight: 500; }
+        .whois-lookup-container a:hover { text-decoration: underline; }
+
+        .suggestions { margin-top: 0; } /* Reset margin as heading handles spacing */
+        .suggestion-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+        .suggestion-item { background-color: #f8f8f8; padding: 15px; border-radius: 10px; text-align: center; cursor: pointer; transition: all var(--transition-speed) ease; font-weight: 500; font-size: 16px; word-break: break-all; }
+        .suggestion-item:hover { background-color: var(--card-background); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); transform: translateY(-3px); }
+        .suggestion-item .domain-extension { color: var(--text-secondary); }
+
+        /* Features Section (existing) */
+        .features { background-color: white; } /* Added for contrast if body is not white */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; }
+        .feature-card { background-color: var(--card-background); border-radius: var(--border-radius); padding: 40px 30px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); transition: transform var(--transition-speed) ease; }
+        .feature-card:hover { transform: translateY(-10px); }
+        .feature-icon { font-size: 40px; margin-bottom: 25px; background: linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%); -webkit-background-clip: text; color: transparent; }
+        .feature-title { font-size: 22px; font-weight: 600; margin-bottom: 15px; }
+        .feature-description { color: var(--text-secondary); font-size: 16px; }
+        
+        /* How It Works Section */
+        #how-it-works { background-color: var(--background-color); }
+        .how-it-works-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+        .step-card { background-color: var(--card-background); border-radius: var(--border-radius); padding: 30px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.07); }
+        .step-icon { font-size: 36px; color: var(--primary-color); margin-bottom: 20px; }
+        .step-title { font-size: 20px; font-weight: 600; margin-bottom: 10px; }
+        .step-description { font-size: 15px; color: var(--text-secondary); }
+
+        /* About Section */
+        #about { background-color: white; }
+        .about-content p { font-size: 18px; line-height: 1.7; color: var(--text-secondary); max-width: 800px; margin: 0 auto 20px auto; text-align: center; }
+        .about-content p:last-child { margin-bottom: 0; }
+
+        /* FAQ Section */
+        #faq { background-color: var(--background-color); }
+        .faq-item {
+            background-color: var(--card-background);
+            border-radius: 12px; /* Slightly smaller radius for items */
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .faq-question {
+            padding: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+        }
+        .faq-question .toggle-icon { transition: transform var(--transition-speed) ease; }
+        .faq-answer {
+            padding: 0 20px 20px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height var(--transition-speed) ease-out, padding var(--transition-speed) ease-out;
+        }
+        .faq-item.active .faq-answer { max-height: 300px; /* Adjust as needed */ }
+        .faq-item.active .toggle-icon { transform: rotate(45deg); }
+
+        /* Supported Registrars Section */
+        .partners { background-color: #f5f5f7; }
+        .partners-logos { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 50px; max-width: 1200px; margin: 0 auto; }
+        .partner-logo { height: 95px; width: auto; max-width: 120px; object-fit: contain; opacity: 0.7; transition: opacity var(--transition-speed) ease; }
+        .partner-logo:hover { opacity: 1; }
+
+        /* Contact Section */
+        #contact { background-color: white; text-align: center; }
+        #contact p { font-size: 18px; color: var(--text-secondary); max-width: 700px; margin-left:auto; margin-right:auto; }
+        
+        .loading { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.9); z-index: 10000; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        .spinner { width: 70px; height: 70px; margin-bottom: 30px; position: relative; }
+        .spinner::before, .spinner::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; border: 5px solid transparent; border-top-color: var(--primary-color); }
+        .spinner::before { z-index: 10; animation: spin 1s infinite linear; }
+        .spinner::after { border: 5px solid rgba(0, 113, 227, 0.2); }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading-text { font-size: 20px; font-weight: 500; color: var(--text-color); }
+                
+        footer { background-color: var(--secondary-color); color: white; padding: 60px 20px; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; }
+        .footer-column h3 { font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+        .footer-links { list-style: none; }
+        .footer-link { margin-bottom: 10px; }
+        .footer-link a { color: #a1a1a6; text-decoration: none; transition: color var(--transition-speed) ease; }
+        .footer-link a:hover { color: white; }
+        .copyright { text-align: center; padding-top: 40px; color: #a1a1a6; font-size: 14px; }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .hero { padding-top: 100px; min-height: 80vh; }
+            .hero-title { font-size: 36px; }
+            .hero-subtitle { font-size: 18px; }
+            .search-box { flex-direction: column; }
+            .search-button { padding: 15px; border-radius: 0 0 30px 30px; }
+            .search-input { border-radius: 30px 30px 0 0; }
+            .search-icon { top: 20px; transform: none; }
+            .section-title { font-size: 28px; }
+            .section-subtitle { font-size: 16px; }
+            .navbar { padding: 15px 20px; }
+            .nav-links { display: none; } /* Hamburger menu needed for mobile */
+            
+            .search-results-container { padding: 20px; }
+            .result-main-header h2 { font-size: 24px; }
+            .domain-name-display { font-size: 28px; }
+            .status-text-prominent { font-size: 20px; }
+            .results-section-heading { font-size: 20px; }
+            .registrar-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .registrar-item-button { width: 100%; text-align: center; }
+            .suggestion-grid { grid-template-columns: 1fr; } /* Single column suggestions on mobile */
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-color: #0a84ff;
+                --secondary-color: #1c1c1e;
+                --background-color: #000000;
+                --card-background: #1c1c1e;
+                --text-color: #f5f5f7;
+                --text-secondary: #8E8E93;
+                --warning-color: #ffc400; /* Dark mode premium */
+            }
+            .hero { background: linear-gradient(135deg, #000000 0%, #121212 100%); }
+            .navbar { background-color: rgba(28, 28, 30, 0.7); }
+            .hero-title { background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%); -webkit-background-clip: text;}
+            
+            .features, #about, #contact { background-color: #0d0d0d; }
+            #how-it-works, #faq, .partners { background-color: #1c1c1e; }
+            
+            .loading { background-color: rgba(0, 0, 0, 0.9); }
+            
+            .search-results-wrapper { background-color: var(--background-color); }
+            .search-results-container { background-color: var(--card-background); }
+            .result-main-header { border-bottom-color: #2c2c2e; }
+            .domain-status-primary { background-color: #232325; }
+            .status-detail-value code { background-color: #333; color: #ddd; }
+            .results-section-heading { border-top-color: #2c2c2e; }
+            .registrar-item, .suggestion-item { background-color: #2c2c2e; }
+            .registrar-item:hover { background-color: #3a3a3c; }
+            .suggestion-item:hover { background-color: #3a3a3c; }
+            .faq-item { background-color: #232325; }
+
+            footer { background-color: #121212; }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo-container">
+            <div class="logo">iCan<span>Search</span></div>
+        </div>
+        <div class="nav-links">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#how-it-works" class="nav-link">How It Works</a>
+            <a href="#supported-registrars" class="nav-link">Registrars</a>
+            <a href="#about" class="nav-link">About</a>
+            <a href="#faq" class="nav-link">FAQ</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </div>
+    </div>
+    
+    <section class="hero">
+        <div class="decorative-circles">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+        </div>
+        
+        <div class="hero-content">
+            <h1 class="hero-title">Find your perfect domain</h1>
+            <p class="hero-subtitle">Check domain availability instantly and register with your favorite provider in just a few clicks.</p>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="domainInput" placeholder="Enter your domain name (e.g., mydomain.com)" autocomplete="off">
+                    <button class="search-button" id="searchButton">Search</button>
+                </div>
+            </div>
+            
+            <div class="examples">
+                Examples: 
+                <span class="example-domain">yourbrand.com</span> 
+                <span class="example-domain">mycoolapp.io</span> 
+                <span class="example-domain">takenexample.com</span>
+                <span class="example-domain">fixmypdf.net</span>
+                <span class="example-domain">icansearch.ai</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Results Section - REVAMPED -->
+    <section id="searchResultsWrapper" class="search-results-wrapper">
+        <div id="searchResultsContainer" class="search-results-container">
+            <div class="result-main-header">
+                <h2 id="resultMainTitle">Domain Search Results</h2>
+            </div>
+            
+            <div id="domainStatusPrimary" class="domain-status-primary">
+                <!-- Filled by JS: Icon, Domain Name, Status Text -->
+            </div>
+
+            <div class="status-details-group" id="statusDetailsGroup">
+                <div>
+                    <span class="status-detail-label">Detailed Reason:</span>
+                    <p class="status-detail-value" id="statusReasonText">-</p>
+                </div>
+                <div>
+                    <span class="status-detail-label">API Status:</span>
+                    <p class="status-detail-value"><code id="apiStatusText">-</code></p>
+                </div>
+            </div>
+            
+            <div id="registrarOptions" style="display: none;">
+                <h3 class="results-section-heading">Register This Domain</h3>
+                <div class="registrars-list-vertical" id="registrarsListVertical">
+                    <!-- Filled by JS -->
+                </div>
+                <div class="whois-lookup-container">
+                    <p>Need more info? <a id="whoisLink" href="#" target="_blank" rel="noopener noreferrer">Perform a manual WHOIS lookup</a>.</p>
+                </div>
+            </div>
+            
+            <div id="suggestionsArea" style="display: none;">
+                <h3 class="results-section-heading">Alternative Suggestions</h3>
+                <div class="suggestion-grid" id="suggestionList">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features content-section" id="features">
+        <h2 class="section-title">Why choose iCanSearch?</h2>
+        <p class="section-subtitle">The most reliable way to find and register available domains with confidence.</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-bolt feature-icon"></i>
+                <h3 class="feature-title">Instant Checks</h3>
+                <p class="feature-description">Get domain availability results quickly using advanced API checks and DNS hints.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-shield-alt feature-icon"></i>
+                <h3 class="feature-title">Accurate Information</h3>
+                <p class="feature-description">Leveraging robust APIs and clear status interpretation for precise results.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-magic feature-icon"></i>
+                <h3 class="feature-title">Smart Suggestions</h3>
+                <p class="feature-description">Find alternative TLDs and creative domain ideas if your first choice is taken.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section" id="how-it-works">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle">Finding your domain is simple and straightforward with iCanSearch.</p>
+        <div class="how-it-works-grid">
+            <div class="step-card">
+                <i class="fas fa-keyboard step-icon"></i>
+                <h3 class="step-title">1. Enter Domain</h3>
+                <p class="step-description">Type the domain name you have in mind into our search bar. Add a TLD (like .com) or we'll default to .com.</p>
+            </div>
+            <div class="step-card">
+                <i class="fas fa-cogs step-icon"></i>
+                <h3 class="step-title">2. We Check</h3>
+                <p class="step-description">Our system instantly queries multiple sources, including real-time APIs, to check its availability.</p>
+            </div>
+            <div class="step-card">
+                <i class="fas fa-check-circle step-icon"></i>
+                <h3 class="step-title">3. View Results</h3>
+                <p class="step-description">See if your domain is available, or explore suggestions. If available, choose a registrar to proceed.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="partners content-section" id="supported-registrars"> 
+        <h2 class="section-title">Supported Registrars</h2> 
+        <p class="section-subtitle">We help you connect with top domain registrars to secure your chosen domain.</p> 
+        
+        <div class="partners-logos">
+            <img src="/godaddy.jpg" alt="GoDaddy" class="partner-logo" title="GoDaddy">
+            <img src="/namecheap.jpg" alt="Namecheap" class="partner-logo" title="Namecheap">
+            <img src="/hostinger.jpg" alt="Hostinger" class="partner-logo" title="Hostinger">
+            <img src="/dynadot.png" alt="Dynadot" class="partner-logo" title="Dynadot">
+            <img src="/bigrock.jpg" alt="BigRock" class="partner-logo" title="BigRock">
+            <img src="/namesilo.png" alt="NameSilo" class="partner-logo" title="NameSilo">
+            <img src="/bluehost.jpg" alt="Bluehost" class="partner-logo" title="Bluehost"> 
+            <img src="/domain.jpg" alt="Domain.com" class="partner-logo" title="Domain.com">
+        </div>
+    </section>
+
+    <section class="content-section" id="about">
+        <h2 class="section-title">About iCanSearch</h2>
+        <div class="about-content">
+            <p>iCanSearch was born out of a simple need: a fast, reliable, and user-friendly way to check domain name availability. We aim to cut through the noise and provide clear, actionable results, helping you find and secure the perfect domain for your next big idea, business, or personal project.</p>
+            <p>Our tool uses a combination of real-time API lookups and intelligent checks to give you the most accurate information possible. We then provide direct links to reputable registrars, making the registration process seamless. We're constantly working to improve iCanSearch and add features that make your domain hunt easier.</p>
+        </div>
+    </section>
+
+    <section class="content-section" id="faq">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-subtitle">Have questions? We've got answers to some common queries.</p>
+        <div class="faq-list" style="max-width: 800px; margin: 0 auto;">
+            <div class="faq-item">
+                <div class="faq-question">How accurate is the domain availability check? <i class="fas fa-plus toggle-icon"></i></div>
+                <div class="faq-answer">
+                    <p>We strive for high accuracy by using real-time data from domain information providers like Domainr and supplementing with DNS checks. However, domain availability can change rapidly. Always confirm the status with the registrar before making any decisions.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">What if the domain I want is taken? <i class="fas fa-plus toggle-icon"></i></div>
+                <div class="faq-answer">
+                    <p>If your desired domain is unavailable, iCanSearch provides a list of alternative suggestions, including different TLDs (like .net, .io, .co) or variations of your original name. You can also try a completely new name!</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Does iCanSearch register domains? <i class="fas fa-plus toggle-icon"></i></div>
+                <div class="faq-answer">
+                    <p>No, iCanSearch is a domain availability checking tool. We provide links to popular domain registrars where you can purchase your chosen domain if it's available.</p>
+                </div>
+            </div>
+             <div class="faq-item">
+                <div class="faq-question">What does "Premium" or "Marketed" domain mean? <i class="fas fa-plus toggle-icon"></i></div>
+                <div class="faq-answer">
+                    <p>A "Premium" domain is often a short, memorable, or keyword-rich domain that registrars or resellers price higher due to its perceived value. "Marketed" means it's likely listed for sale on an aftermarket platform, often by its current owner. These domains are usually more expensive than standard registrations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section" id="contact">
+        <h2 class="section-title">Get In Touch</h2>
+        <p class="section-subtitle">Have feedback, questions, or suggestions? We'd love to hear from you! For now, please connect with us through our hypothetical social media channels or imagine a contact form here. This is a demo site, but your input is valuable for future development!</p>
+        <!-- Placeholder for contact form or email -->
+    </section>
+    
+    <div class="loading" id="loadingIndicator">
+        <div class="spinner"></div>
+        <p class="loading-text">Checking domain availability...</p>
+    </div>
+        
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>iCanSearch</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#about">About Us</a></li>
+                    <li class="footer-link"><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Features</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">Domain Search</a></li>
+                    <li class="footer-link"><a href="#how-it-works">How It Works</a></li>
+                    <li class="footer-link"><a href="#features">Why Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#faq">FAQ</a></li>
+                    <li class="footer-link"><a href="#supported-registrars">Supported Registrars</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">Terms of Service</a></li>
+                    <li class="footer-link"><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2025 iCanSearch.com • All rights reserved (Demo)
+        </div>
+    </footer>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const domainInput = document.getElementById('domainInput');
+        const searchButton = document.getElementById('searchButton');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        
+        // Revamped Search Results Elements
+        const searchResultsWrapper = document.getElementById('searchResultsWrapper');
+        const resultMainTitle = document.getElementById('resultMainTitle');
+        const domainStatusPrimary = document.getElementById('domainStatusPrimary');
+        const statusReasonText = document.getElementById('statusReasonText');
+        const apiStatusText = document.getElementById('apiStatusText');
+        const registrarOptions = document.getElementById('registrarOptions');
+        const registrarsListVertical = document.getElementById('registrarsListVertical');
+        const whoisLink = document.getElementById('whoisLink');
+        const suggestionsArea = document.getElementById('suggestionsArea');
+        const suggestionList = document.getElementById('suggestionList');
+
+        const exampleDomains = document.querySelectorAll('.example-domain');
+
+        const RAPIDAPI_KEY = 'ba79451516mshb871d56bed355dep1ef136jsnda991528e579'; // IMPORTANT: Replace with your actual key
+        const RAPIDAPI_HOST = 'domainr.p.rapidapi.com';
+        
+        const registrars = [
+            { name: 'GoDaddy', logo: '/godaddy.jpg', searchUrl: 'https://www.godaddy.com/domains/searchresults.aspx?domainToCheck=' },
+            { name: 'Namecheap', logo: '/namecheap.jpg', searchUrl: 'https://www.namecheap.com/domains/registration/results.aspx?domain=' },
+            { name: 'Hostinger', logo: '/hostinger.jpg', searchUrl: 'https://www.hostinger.com/domain-checker#checker-input=' },
+            { name: 'Dynadot', logo: '/dynadot.png', searchUrl: 'https://www.dynadot.com/domain/search.html?domain=' },
+            { name: 'BigRock', logo: '/bigrock.jpg', searchUrl: 'https://www.bigrock.in/domain-registration/index.php?domain_name=' },
+            { name: 'NameSilo', logo: '/namesilo.png', searchUrl: 'https://www.namesilo.com/domain/search-domains?query=' },
+            { name: 'Bluehost', logo: '/bluehost.jpg', searchUrl: 'https://www.bluehost.com/domains/search-results?search=' },
+            { name: 'Domain.com', logo: '/domain.jpg', searchUrl: 'https://www.domain.com/registration/?flow=domainDFE&search=' },
+        ];
+        const popularTLDs = ['.com', '.net', '.org', '.io', '.ai', '.co', '.app', '.dev', '.me', '.xyz', '.tech', '.online', '.store', '.info', '.biz', '.us', '.ca', '.uk', '.de', '.eu'];
+
+        exampleDomains.forEach(example => {
+            example.addEventListener('click', () => {
+                domainInput.value = example.textContent.trim();
+                // Optional: handleSearch();
+            });
+        });
+
+        searchButton.addEventListener('click', handleSearch);
+        domainInput.addEventListener('keypress', e => e.key === 'Enter' && handleSearch());
+
+        // FAQ Accordion
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                const currentlyActive = document.querySelector('.faq-item.active');
+                if (currentlyActive && currentlyActive !== item) {
+                    currentlyActive.classList.remove('active');
+                    currentlyActive.querySelector('.toggle-icon').classList.remove('fa-minus');
+                    currentlyActive.querySelector('.toggle-icon').classList.add('fa-plus');
+                }
+                
+                item.classList.toggle('active');
+                const icon = question.querySelector('.toggle-icon');
+                if (item.classList.contains('active')) {
+                    icon.classList.remove('fa-plus');
+                    icon.classList.add('fa-minus');
+                } else {
+                    icon.classList.remove('fa-minus');
+                    icon.classList.add('fa-plus');
+                }
+            });
+        });
+
+
+        async function handleSearch() {
+            let domain = domainInput.value.trim().toLowerCase();
+            if (!domain) {
+                alert('Please enter a domain name.');
+                return;
+            }
+            if (!domain.includes('.')) domain += '.com';
+            domainInput.value = domain; 
+
+            loadingIndicator.style.display = 'flex';
+            searchResultsWrapper.classList.remove('visible');
+
+            let finalResult = { available: false, reason: "Starting checks...", api_status_string: "N/A", is_premium_or_marketed: false, is_inconclusive: true };
+
+            try {
+                const cloudflareHint = await checkWithCloudflare(domain);
+                const domainrResult = await checkDomainWithDomainr_statusEndpoint(domain);
+                finalResult = domainrResult; 
+
+                if (!finalResult.available && !finalResult.is_premium_or_marketed && !cloudflareHint.available && !finalResult.reason.toLowerCase().includes('cloudflare')) {
+                    // Only append Cloudflare if Domainr isn't already conclusive about unavailability for non-premium
+                     // and Cloudflare also says unavailable.
+                    if (finalResult.reason && !finalResult.reason.endsWith('.')) finalResult.reason += '.';
+                    finalResult.reason += ` Cloudflare DNS also indicates it's in use (has records).`;
+                }
+                
+            } catch (error) {
+                console.error(`Overall error in handleSearch for ${domain}:`, error);
+                finalResult = { available: false, reason: `Error checking domain: ${error.message || 'Unknown error'}`, api_status_string: "Error", is_inconclusive: true };
+            } finally {
+                displayResult(domain, finalResult);
+                loadingIndicator.style.display = 'none';
+                
+                searchResultsWrapper.style.display = 'block'; // Make it part of layout
+                void searchResultsWrapper.offsetWidth; // Trigger reflow
+                searchResultsWrapper.classList.add('visible');
+
+                setTimeout(() => {
+                     searchResultsWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 50);
+            }
+        }
+
+        async function checkWithCloudflare(domain) {
+            const url = `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=A`;
+            try {
+                const response = await fetch(url, { headers: { 'Accept': 'application/dns-json' } });
+                if (!response.ok) {
+                    return { available: true, reason: `DNS Check HTTP ${response.status}` }; 
+                }
+                const data = await response.json();
+                if (data.Status === 3 || !data.Answer || data.Answer.length === 0) { 
+                    return { available: true, reason: 'DNS: No A records (or NXDOMAIN)' };
+                }
+                return { available: false, reason: 'DNS: Has A records' };
+            } catch (error) {
+                return { available: true, reason: `DNS Check Network error` }; 
+            }
+        }
+
+        async function checkDomainWithDomainr_statusEndpoint(domain) {
+            if (RAPIDAPI_KEY === 'YOUR_RAPIDAPI_KEY_HERE' || !RAPIDAPI_KEY) {
+                return { domain, available: false, reason: 'API Key Not Configured. Please set it up in the script.', api_status_string: 'Config Error', is_inconclusive: true };
+            }
+            const url = `https://${RAPIDAPI_HOST}/v2/status?domain=${encodeURIComponent(domain)}`;
+            const headers = { 'x-rapidapi-key': RAPIDAPI_KEY, 'x-rapidapi-host': RAPIDAPI_HOST };
+            
+            try {
+                const response = await fetch(url, { headers, signal: AbortSignal.timeout(15000) }); 
+                if (!response.ok) {
+                    const errorText = await response.text().catch(() => "Could not read error text");
+                    throw new Error(`API error (${response.status}): ${errorText}`);
+                }
+                const data = await response.json();
+
+                let result = {
+                    domain, available: false, reason: "Status determination pending",
+                    api_status_string: "N/A", is_premium_or_marketed: false, is_inconclusive: false
+                };
+
+                if (data.status && Array.isArray(data.status) && data.status.length > 0) {
+                    const domainInfo = data.status[0];
+                    const api_status_string = (domainInfo.status || '').toLowerCase();
+                    result.api_status_string = api_status_string || "No status flags returned";
+                    const status_flags = new Set(api_status_string.split(' ').filter(s => s)); 
+
+                    const overriding_unavailable_flags = new Set(['active', 'parked', 'marketed', 'expiring', 'deleting', 'priced', 'transferable', 'premium', 'claimed', 'reserved', 'dpml', 'disallowed', 'pending', 'taken']);
+                    const premium_marketed_flags = new Set(['marketed', 'premium', 'priced', 'transferable']); // 'transferable' can imply aftermarket
+
+                    if (status_flags.has('inactive')) {
+                        let is_overridden_by_unavailable_flag = false;
+                        for (const flag of overriding_unavailable_flags) {
+                            if (status_flags.has(flag)) {
+                                is_overridden_by_unavailable_flag = true;
+                                result.available = false;
+                                result.is_premium_or_marketed = premium_marketed_flags.has(flag);
+                                result.reason = result.is_premium_or_marketed ? 
+                                    "This domain is likely premium or listed on an aftermarket. It might be available for purchase at a higher price." :
+                                    "This domain is registered or otherwise unavailable (e.g., active, parked, reserved).";
+                                break;
+                            }
+                        }
+                        if (!is_overridden_by_unavailable_flag) {
+                            result.available = true;
+                            result.reason = "This domain appears to be available for standard registration!";
+                        }
+                    } else { 
+                        result.available = false;
+                        let matched_unavailable_flag = null;
+                        for (const flag of overriding_unavailable_flags) {
+                            if (status_flags.has(flag)) {
+                                matched_unavailable_flag = flag;
+                                break;
+                            }
+                        }
+
+                        if (matched_unavailable_flag) {
+                             result.is_premium_or_marketed = premium_marketed_flags.has(matched_unavailable_flag);
+                             result.reason = result.is_premium_or_marketed ?
+                                "This domain is likely premium or listed on an aftermarket. It might be available for purchase at a higher price." :
+                                "This domain is already registered or its status indicates unavailability (e.g., active, parked, reserved).";
+                        } else if (status_flags.has('unknown')) {
+                            result.is_inconclusive = true;
+                            result.reason = "The status of this domain could not be definitively determined at this time. It might be available or recently registered. Please verify with a registrar.";
+                        } else if (status_flags.has('invalid')) {
+                            result.reason = "The domain name or TLD entered is invalid or not supported for lookup via this API.";
+                        } else if (status_flags.has('undelegated') && status_flags.size === 1) { 
+                            result.reason = "This domain is registered but not actively in use (undelegated name servers). It is not available for new registration.";
+                        } else if (!api_status_string && data.status[0].zone) { // Empty status but has zone -> check registrar (Domainr's old behavior for availability)
+                            result.is_inconclusive = true; // Treat as inconclusive, prompt user to check.
+                            result.reason = "The API response is unclear. The domain might be available. Please verify with a registrar.";
+                        } else {
+                             result.reason = "This domain is likely registered or otherwise unavailable based on the API status flags received.";
+                        }
+                    }
+                } else {
+                    result.reason = "Could not retrieve specific domain status flags from the API. The domain might be invalid or the TLD unsupported by the API.";
+                    result.api_status_string = "API Response Error or Empty Status";
+                    result.is_inconclusive = true;
+                }
+                return result;
+
+            } catch (error) {
+                let userFriendlyError = "Could not check domain status due to a network or API issue.";
+                if (error.message.includes("API error (429)")) userFriendlyError = "Too many requests to the domain API. Please try again in a moment.";
+                else if (error.message.includes("API error (400)") || error.message.includes("invalid")) userFriendlyError = "The domain name or TLD might be invalid or not supported for lookup.";
+                
+                return { domain, available: false, reason: userFriendlyError, api_status_string: 'API Fetch/Processing Error', is_inconclusive: true, error_details: error.message };
+            }
+        }
+
+        function displayResult(domain, resultDetails) {
+            const { available, reason, api_status_string, is_premium_or_marketed, is_inconclusive } = resultDetails;
+            
+            resultMainTitle.innerHTML = `Results for <span class="searched-domain-emphasis">${domain}</span>`;
+
+            domainStatusPrimary.innerHTML = ''; // Clear previous
+            domainStatusPrimary.className = 'domain-status-primary'; // Reset classes
+
+            let statusIconClass, statusText, primaryClass;
+
+            if (available) {
+                statusIconClass = 'fa-check-circle';
+                statusText = 'is Available!';
+                primaryClass = 'available';
+            } else if (is_premium_or_marketed) {
+                statusIconClass = 'fa-tag'; // Using fa-tag for premium/marketed
+                statusText = 'is Premium / Marketed';
+                primaryClass = 'premium';
+            } else {
+                statusIconClass = 'fa-times-circle';
+                statusText = 'is Not Available';
+                primaryClass = 'unavailable';
+            }
+            domainStatusPrimary.classList.add(primaryClass);
+
+            let displayReason = reason;
+            if (is_inconclusive && available) { // Edge case from old logic, less likely with new logic
+                displayReason = "Status check was inconclusive, but it might be available. Please verify with a registrar."
+            } else if (is_inconclusive && !available) {
+                displayReason = reason; // Already set by API check
+            }
+
+
+            domainStatusPrimary.innerHTML = `
+                <div class="status-icon-large"><i class="fas ${statusIconClass}"></i></div>
+                <div class="domain-name-display">${domain}</div>
+                <div class="status-text-prominent">${statusText}</div>
+            `;
+            
+            statusReasonText.textContent = displayReason || '-';
+            apiStatusText.textContent = api_status_string || '-';
+
+            if (available || is_premium_or_marketed) { // Show registrars if available OR premium (user might want to buy)
+                registrarOptions.style.display = 'block';
+                displayRegistrarsVertical(domain);
+            } else {
+                registrarOptions.style.display = 'none';
+                registrarsListVertical.innerHTML = ''; 
+            }
+            whoisLink.href = `https://who.is/whois/${domain}`;
+            
+            generateSuggestions(domain, available);
+            if (suggestionList.hasChildNodes()) {
+                suggestionsArea.style.display = 'block';
+            } else {
+                suggestionsArea.style.display = 'none';
+            }
+        }
+
+        function displayRegistrarsVertical(domain) {
+            registrarsListVertical.innerHTML = '';
+            registrars.forEach(registrar => {
+                const registrarItem = document.createElement('div');
+                registrarItem.className = 'registrar-item';
+                const searchUrl = registrar.searchUrl ? `${registrar.searchUrl}${encodeURIComponent(domain)}` : `https://${registrar.name.toLowerCase().replace(/\s+/g, '')}.com`;
+                
+                registrarItem.innerHTML = `
+                    <img src="${registrar.logo}" alt="${registrar.name}" class="registrar-item-logo">
+                    <div class="registrar-item-info">
+                        <h4 class="registrar-item-name">${registrar.name}</h4>
+                    </div>
+                    <a href="${searchUrl}" target="_blank" rel="noopener noreferrer" class="registrar-item-button">Check Price</a>
+                `;
+                registrarsListVertical.appendChild(registrarItem);
+            });
+        }
+
+        function generateSuggestions(searchedDomain, isSearchedDomainAvailable) {
+            suggestionList.innerHTML = '';
+            const baseName = searchedDomain.includes('.') ? searchedDomain.split('.')[0] : searchedDomain;
+            const currentTld = searchedDomain.includes('.') ? searchedDomain.substring(searchedDomain.indexOf('.')) : '.com'; // Default to .com if no TLD
+            let suggestionsToShow = [];
+
+            popularTLDs.forEach(tld => {
+                if (tld.toLowerCase() !== currentTld.toLowerCase() || !isSearchedDomainAvailable) { // Add if different TLD, or if original is unavailable
+                    suggestionsToShow.push(`${baseName}${tld}`);
+                }
+            });
+            
+            if (!isSearchedDomainAvailable) { // Add more creative suggestions if original is taken
+                const prefixes = ['my', 'get', 'the', 'go', 'try', 'best', 'new', 'your', 'live', 'pro'];
+                const suffixes = ['online', 'app', 'web', 'now', 'shop', 'global', 'digital', 'world', 'hq', 'hub'];
+                prefixes.forEach(p => {
+                    if (suggestionsToShow.length < 15 && !baseName.startsWith(p)) suggestionsToShow.push(`${p}${baseName}${currentTld}`);
+                });
+                suffixes.forEach(s => {
+                    if (suggestionsToShow.length < 15 && !baseName.endsWith(s)) suggestionsToShow.push(`${baseName}${s}${currentTld}`);
+                });
+                if (baseName.length > 4 && baseName.indexOf('-') === -1 && suggestionsToShow.length < 15) {
+                    const mid = Math.floor(baseName.length / 2);
+                    suggestionsToShow.push(`${baseName.substring(0, mid)}-${baseName.substring(mid)}${currentTld}`);
+                }
+            }
+            
+            suggestionsToShow = [...new Set(suggestionsToShow)] 
+                .filter(s => s.toLowerCase() !== searchedDomain.toLowerCase())
+                .sort(() => 0.5 - Math.random()) // Shuffle
+                .slice(0, 12); // Max 12 suggestions
+
+            suggestionsToShow.forEach(suggDomain => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                const parts = suggDomain.split('.');
+                const name = parts[0];
+                const ext = '.' + parts.slice(1).join('.');
+                item.innerHTML = `${name}<span class="domain-extension">${ext}</span>`;
+                item.addEventListener('click', () => {
+                    domainInput.value = suggDomain;
+                    handleSearch();
+                });
+                suggestionList.appendChild(item);
+            });
+        }
+        domainInput.focus();
+    });
+    </script>
+</body>
+</html>

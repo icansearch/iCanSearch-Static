@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Search Results | iCanSearch</title>
+    <meta name="description" content="View detailed domain availability results and registrar options for your domain search.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0071e3;
+            --primary-hover: #0077ED;
+            --secondary-color: #1d1d1f;
+            --success-color: #2fd565;
+            --error-color: #ff3b30;
+            --warning-color: #ff9500;
+            --background-color: #fbfbfd;
+            --card-background: #ffffff;
+            --text-color: #1d1d1f;
+            --text-secondary: #86868b;
+            --border-color: #e5e5e7;
+            --border-radius: 16px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #007AFF, #5AC8FA);
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--text-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color var(--transition-speed) ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+        
+        /* Back to search button */
+        .back-to-search {
+            position: absolute;
+            left: 40px;
+            top: 100px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all var(--transition-speed) ease;
+            z-index: 10;
+        }
+        
+        .back-to-search:hover {
+            transform: translateX(-5px);
+        }
+        
+        /* Search Results Styles */
+        .results-container {
+            max-width: 1000px;
+            margin: 120px auto 60px;
+            padding: 0 20px;
+        }
+        
+        .results-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .results-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .results-meta {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+        
+        /* Status Card */
+        .domain-status-card {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .status-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .available .status-icon { color: var(--success-color); }
+        .unavailable .status-icon { color: var(--error-color); }
+        .premium .status-icon { color: var(--warning-color); }
+        
+        .domain-name {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+        
+        .status-text {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .available .status-text { color: var(--success-color); }
+        .unavailable .status-text { color: var(--error-color); }
+        .premium .status-text { color: var(--warning-color); }
+        
+        .status-description {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        
+        .status-meta {
+            background-color: rgba(0, 0, 0, 0.03);
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .status-meta code {
+            background-color: rgba(0, 0, 0, 0.06);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+        
+        /* Registrars List */
+        .registrars-card {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--box-shadow);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .registrars-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .registrars-list {
+            list-style: none;
+        }
+        
+        .registrar-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            transition: all var(--transition-speed) ease;
+        }
+        
+        .registrar-item:last-child {
+            border-bottom: none;
+        }
+        
+        .registrar-item:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+            transform: translateX(5px);
+        }
+        
+        .registrar-logo {
+            height: 45px;
+            width: 90px;
+            object-fit: contain;
+            margin-right: 20px;
+        }
+        
+        .registrar-info {
+            flex: 1;
+        }
+        
+        .registrar-name {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .registrar-features {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .registrar-feature {
+            display: inline-block;
+            margin-right: 15px;
+        }
+        
+        .registrar-feature i {
+            margin-right: 5px;
+            color: var(--primary-color);
+        }
+        
+        .registrar-action {
+            margin-left: 20px;
+        }
+        
+        .check-price-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease;
+        }
+        
+        .check-price-btn:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        /* Suggestions */
+        .suggestions-card {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--box-shadow);
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .suggestions-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* ALWAYS 5 columns */
+            gap: 15px;
+        }
+        
+        /*
+        REMOVED/COMMENTED OUT for 5-column layout
+        @media (min-width: 768px) {
+            .suggestions-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .suggestions-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+        */
+        
+        .suggestion-item {
+            background-color: rgba(0, 0, 0, 0.03);
+            border-radius: 10px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .suggestion-item:hover {
+            background-color: white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .suggestion-domain {
+            font-weight: 600;
+            font-size: 15px;
+            overflow-wrap: break-word; 
+            word-wrap: break-word; 
+            line-height: 1.3;
+            margin-bottom: 8px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow wrapping if domain name itself is very long */
+        }
+        
+        .suggestion-extension {
+            color: var(--text-secondary);
+            display: inline-block; 
+            white-space: nowrap;   
+        }
+        
+        .suggestion-status {
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .suggestion-status i {
+            margin-right: 5px;
+        }
+        
+        .suggestion-status.available {
+            color: var(--success-color);
+        }
+        
+        .suggestion-status.unavailable {
+            color: var(--error-color);
+        }
+        
+        .check-again-btn {
+            display: block;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            margin: 40px auto 0;
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease;
+        }
+        
+        .check-again-btn:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        /* Loading */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .spinner {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .spinner::before, .spinner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            border-top-color: var(--primary-color);
+        }
+        
+        .spinner::before {
+            z-index: 10;
+            animation: spin 1s infinite linear;
+        }
+        
+        .spinner::after {
+            border: 5px solid rgba(0, 113, 227, 0.2);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 60px 20px;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-link {
+            margin-bottom: 10px;
+        }
+        
+        .footer-link a {
+            color: #a1a1a6;
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        
+        .footer-link a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 40px;
+            color: #a1a1a6;
+            font-size: 14px;
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .navbar { padding: 15px 20px; }
+            .nav-links { display: none; }
+            .back-to-search { left: 20px; }
+            .results-container { margin-top: 90px; }
+            .results-title { font-size: 28px; }
+            .domain-name { font-size: 32px; }
+            .status-text { font-size: 20px; }
+            .domain-status-card, .registrars-card, .suggestions-card { padding: 30px 20px; }
+            .registrar-item { flex-direction: column; align-items: flex-start; }
+            .registrar-logo { margin-bottom: 15px; }
+            .registrar-action { margin-left: 0; margin-top: 15px; }
+            /* .suggestions-grid { grid-template-columns: repeat(2, 1fr); } */ /* Ensure this is not overriding to 2 columns for mobile if 5 are desired, or adjust as needed for mobile */
+            /* If 5 columns is too much for mobile, you might re-introduce a specific rule here for smaller screens for suggestionsGrid, e.g., repeat(2,1fr) or repeat(3,1fr) */
+            .suggestions-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); } /* More responsive for mobile, adjust minmax as needed */
+
+        }
+        
+        /* Mobile menu hamburger */
+        .mobile-menu-button {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--text-color);
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-button { display: block; }
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: var(--card-background);
+                flex-direction: column;
+                padding: 20px;
+                border-top: 1px solid var(--border-color);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                transform: translateY(-150%);
+                transition: transform var(--transition-speed) ease;
+                z-index: 99;
+            }
+            .nav-links.active {
+                transform: translateY(0);
+                display: flex;
+            }
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-color: #0a84ff;
+                --primary-hover: #2590ff;
+                --secondary-color: #1c1c1e;
+                --background-color: #000000;
+                --card-background: #1c1c1e;
+                --text-color: #f5f5f7;
+                --text-secondary: #8E8E93;
+                --border-color: #38383a;
+            }
+            
+            .navbar { background-color: rgba(28, 28, 30, 0.7); }
+            .loading { background-color: rgba(0, 0, 0, 0.9); }
+            .suggestion-item { background-color: rgba(255, 255, 255, 0.08); }
+            .suggestion-item:hover { background-color: #2c2c2e; }
+            .status-meta { background-color: rgba(255, 255, 255, 0.08); }
+            .status-meta code { background-color: rgba(255, 255, 255, 0.12); }
+            .registrar-item:hover { background-color: rgba(255, 255, 255, 0.05); }
+            footer { background-color: #121212; }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo-container">
+            <a href="index.html" class="logo">iCan<span>Search</span></a>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a href="index.html#features" class="nav-link">Features</a>
+            <a href="index.html#how-it-works" class="nav-link">How It Works</a>
+            <a href="index.html#supported-registrars" class="nav-link">Registrars</a>
+            <a href="index.html#faq" class="nav-link">FAQ</a>
+            <a href="index.html#contact" class="nav-link">Contact</a>
+        </div>
+        <div class="mobile-menu-button" id="mobileMenuButton">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+    
+    <a href="index.html" class="back-to-search">
+        <i class="fas fa-arrow-left"></i> Back to Search
+    </a>
+    
+    <div class="results-container">
+        <div class="results-header">
+            <h1 class="results-title">Domain Search Results</h1>
+            <p class="results-meta">Searched on <span id="searchDate"></span></p>
+        </div>
+        
+        <div class="domain-status-card" id="domainStatusCard">
+            <!-- This will be filled via JavaScript -->
+        </div>
+        
+        <div class="registrars-card" id="registrarsCard" style="display: none;">
+            <h2 class="registrars-title">Register with your preferred provider</h2>
+            <ul class="registrars-list" id="registrarsList">
+                <!-- This will be filled via JavaScript -->
+            </ul>
+        </div>
+        
+        <div class="suggestions-card" id="suggestionsCard">
+            <h2 class="suggestions-title">You might also like</h2>
+            <div class="suggestions-grid" id="suggestionsGrid">
+                <!-- This will be filled via JavaScript -->
+            </div>
+            
+            <button class="check-again-btn" id="checkAgainBtn">Search Another Domain</button>
+        </div>
+    </div>
+    
+    <div class="loading" id="loadingIndicator">
+        <div class="spinner"></div>
+        <p class="loading-text">Checking domain availability...</p>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>iCanSearch</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">About Us</a></li>
+                    <li class="footer-link"><a href="#">Our Team</a></li>
+                    <li class="footer-link"><a href="#">Careers</a></li>
+                    <li class="footer-link"><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Features</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">Domain Search</a></li>
+                    <li class="footer-link"><a href="#">Domain Suggestions</a></li>
+                    <li class="footer-link"><a href="#">Domain Comparison</a></li>
+                    <li class="footer-link"><a href="#">Domain Monitoring</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">Help Center</a></li>
+                    <li class="footer-link"><a href="#">Domain Guide</a></li>
+                    <li class="footer-link"><a href="#">API Documentation</a></li>
+                    <li class="footer-link"><a href="#">Affiliate Program</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">Terms of Service</a></li>
+                    <li class="footer-link"><a href="#">Privacy Policy</a></li>
+                    <li class="footer-link"><a href="#">Cookie Policy</a></li>
+                    <li class="footer-link"><a href="#">GDPR Compliance</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2025 iCanSearch.com • All rights reserved
+        </div>
+    </footer>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const domainStatusCard = document.getElementById('domainStatusCard');
+        const registrarsCard = document.getElementById('registrarsCard');
+        const registrarsList = document.getElementById('registrarsList');
+        const suggestionsCard = document.getElementById('suggestionsCard');
+        const suggestionsGrid = document.getElementById('suggestionsGrid');
+        const checkAgainBtn = document.getElementById('checkAgainBtn');
+        const searchDate = document.getElementById('searchDate');
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const navLinks = document.getElementById('navLinks');
+        
+        // Mobile menu toggle
+        mobileMenuButton.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking on a nav link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        // Format and display current date
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        searchDate.textContent = now.toLocaleDateString(undefined, options);
+        
+        // Check Again button redirects to home page
+        checkAgainBtn.addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+
+        const RAPIDAPI_KEY = 'ba79451516mshb871d56bed355dep1ef136jsnda991528e579'; // Replace with your actual key if needed
+        const RAPIDAPI_HOST = 'domainr.p.rapidapi.com';
+        
+        const registrars = [
+            { 
+                name: 'GoDaddy', 
+                logo: '/godaddy.jpg', 
+                searchUrl: 'https://www.godaddy.com/domains/searchresults.aspx?domainToCheck=',
+                features: ['Free Privacy Protection', '24/7 Support', 'Domain Lock']
+            },
+            { 
+                name: 'Namecheap', 
+                logo: '/namecheap.jpg', 
+                searchUrl: 'https://www.namecheap.com/domains/registration/results.aspx?domain=',
+                features: ['Free WhoisGuard', 'Low Renewal Prices', 'Easy Management']
+            },
+            { 
+                name: 'Hostinger', 
+                logo: '/hostinger.jpg', 
+                searchUrl: 'https://www.hostinger.com/domain-checker#checker-input=',
+                features: ['Competitive Pricing', 'Email Included', 'Free SSL']
+            },
+            { 
+                name: 'Dynadot', 
+                logo: '/dynadot.png', 
+                searchUrl: 'https://www.dynadot.com/domain/search.html?domain=',
+                features: ['Domain Privacy', 'Bulk Registration', 'Domain Parking']
+            },
+            { 
+                name: 'BigRock', 
+                logo: '/bigrock.jpg', 
+                searchUrl: 'https://www.bigrock.in/domain-registration/index.php?domain_name=',
+                features: ['Email Service', 'Website Builder', 'SSL Certificates']
+            },
+            { 
+                name: 'NameSilo', 
+                logo: '/namesilo.png', 
+                searchUrl: 'https://www.namesilo.com/domain/search-domains?query=',
+                features: ['Free WHOIS Privacy', 'No Hidden Fees', 'Volume Discounts']
+            },
+            { 
+                name: 'Bluehost', 
+                logo: '/bluehost.jpg', 
+                searchUrl: 'https://www.bluehost.com/domains/search-results?search=',
+                features: ['Hosting Integration', 'Easy WordPress Install', 'Custom Email']
+            },
+            { 
+                name: 'Domain.com', 
+                logo: '/domain.jpg', 
+                searchUrl: 'https://www.domain.com/registration/?flow=domainDFE&search=',
+                features: ['Domain Transfer', 'Web Hosting', 'SSL Security']
+            },
+        ];
+        
+        const popularTLDs = ['.com', '.net', '.org', '.io', '.ai', '.co', '.app', '.dev', '.me', '.xyz', '.tech', '.online', '.store', '.info', '.biz', '.us', '.ca', '.uk', '.de', '.eu'];
+
+        // Get domain from URL query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const domain = urlParams.get('domain');
+        
+        if (!domain) {
+            // No domain specified, redirect to home
+            window.location.href = 'index.html';
+        } else {
+            // Start search process
+            loadingIndicator.style.display = 'flex';
+            handleDomainSearch(domain);
+        }
+
+        async function handleDomainSearch(domain) {
+            try {
+                // Show loading indicator
+                loadingIndicator.style.display = 'flex';
+                
+                // Perform domain availability checks
+                const cloudflareHint = await checkWithCloudflare(domain);
+                console.log(`Cloudflare Hint for ${domain}:`, cloudflareHint);
+
+                const domainrResult = await checkDomainWithDomainr(domain);
+                console.log(`Domainr Result for ${domain}:`, domainrResult);
+                
+                let finalResult = domainrResult;
+                
+                // Combine results for more accuracy
+                if (!finalResult.available && !finalResult.is_premium_or_marketed && !cloudflareHint.available && 
+                    !finalResult.reason.toLowerCase().includes('cloudflare')) {
+                    finalResult.reason = `${finalResult.reason} (Cloudflare also indicates: ${cloudflareHint.reason})`;
+                }
+                
+                // Display the result
+                displayDomainStatus(domain, finalResult);
+                
+                // Generate suggestions based on the domain name
+                generateSuggestions(domain, finalResult.available);
+                
+                // Display registrars if domain is available
+                if (finalResult.available && !finalResult.is_premium_or_marketed) {
+                    displayRegistrars(domain);
+                    registrarsCard.style.display = 'block';
+                } else {
+                    registrarsCard.style.display = 'none';
+                }
+                
+            } catch (error) {
+                console.error('Error in domain search:', error);
+                displayErrorStatus(domain, error.message || 'An unexpected error occurred');
+            } finally {
+                // Hide loading indicator
+                loadingIndicator.style.display = 'none';
+            }
+        }
+
+        async function checkWithCloudflare(domain) {
+            const url = `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=A`;
+            try {
+                const response = await fetch(url, { headers: { 'Accept': 'application/dns-json' } });
+                if (!response.ok) {
+                    console.warn(`Cloudflare DoH: HTTP error ${response.status} for ${domain}`);
+                    return { available: true, reason: `DNS Check HTTP ${response.status}` }; 
+                }
+                const data = await response.json();
+                if (data.Status === 3 || !data.Answer || data.Answer.length === 0) { // NXDOMAIN or no A records
+                    return { available: true, reason: 'DNS: No A records (or NXDOMAIN)' };
+                }
+                return { available: false, reason: 'DNS: Has A records' };
+            } catch (error) {
+                console.error(`Cloudflare DoH: Network/JSON error for ${domain}:`, error);
+                return { available: true, reason: `DNS Check Network error` }; 
+            }
+        }
+
+        async function checkDomainWithDomainr(domain) {
+            if (RAPIDAPI_KEY === 'YOUR_RAPIDAPI_KEY_HERE' || !RAPIDAPI_KEY || RAPIDAPI_KEY === 'ba79451516mshb871d56bed355dep1ef136jsnda991528e579' && RAPIDAPI_KEY.startsWith('ba79')) {
+                // Using the placeholder key from the prompt, treat as not configured for safety in a real scenario
+                // Or if the default key from the prompt is still there and it shouldn't be.
+                // For this exercise, if it's the example key, we'll proceed, but in production this would be an error.
+                // console.warn("Using a placeholder RapidAPI Key. This might not work in a live environment.");
+                // If you intend to have a demo key, this check might need adjustment.
+                // For now, if it's the specific example key, let's allow it to proceed for testing purposes of this script.
+                if (RAPIDAPI_KEY === 'YOUR_RAPIDAPI_KEY_HERE') {
+                     console.error("CRITICAL: RapidAPI Key not configured.");
+                    return { 
+                        domain, 
+                        available: false, 
+                        reason: 'API Key Not Configured', 
+                        api_status_string: 'Config Error', 
+                        is_inconclusive: true 
+                    };
+                }
+            }
+
+
+            const url = `https://${RAPIDAPI_HOST}/v2/status?domain=${encodeURIComponent(domain)}`;
+            const headers = { 'x-rapidapi-key': RAPIDAPI_KEY, 'x-rapidapi-host': RAPIDAPI_HOST };
+            
+            try {
+                const response = await fetch(url, { headers, signal: AbortSignal.timeout(15000) }); 
+
+                if (!response.ok) {
+                    const errorText = await response.text().catch(() => "Could not read error text");
+                    console.error(`Domainr API Error ${response.status} for ${domain}: ${errorText}`);
+                    throw new Error(`API error (${response.status})`);
+                }
+                const data = await response.json();
+                console.log(`Domainr Full Response Data for ${domain}:`, JSON.stringify(data, null, 2));
+
+                let result = {
+                    domain, 
+                    available: false, 
+                    reason: "Status determination pending",
+                    api_status_string: "N/A", 
+                    is_premium_or_marketed: false, 
+                    is_inconclusive: false
+                };
+
+                if (data.status && Array.isArray(data.status) && data.status.length > 0) {
+                    const domainInfo = data.status[0];
+                    const api_status_string = (domainInfo.status || '').toLowerCase();
+                    result.api_status_string = api_status_string;
+                    const status_flags = new Set(api_status_string.split(' ').filter(s => s)); 
+
+                    const overriding_unavailable_flags = new Set([
+                        'active', 'parked', 'marketed', 'expiring', 'deleting', 'priced', 
+                        'transferable', 'premium', 'claimed', 'reserved', 'dpml', 'disallowed', 'pending', 'taken'
+                    ]);
+                    const premium_marketed_flags = new Set(['marketed', 'premium', 'priced', 'transferable']);
+
+                    if (status_flags.has('inactive')) {
+                        let is_overridden = false;
+                        for (const flag of overriding_unavailable_flags) {
+                            if (status_flags.has(flag)) {
+                                is_overridden = true;
+                                result.available = false;
+                                result.reason = premium_marketed_flags.has(flag) ? 
+                                    "This domain is premium or on the aftermarket." :
+                                    "This domain is already registered.";
+                                if (premium_marketed_flags.has(flag)) result.is_premium_or_marketed = true;
+                                break;
+                            }
+                        }
+                        if (!is_overridden) {
+                            result.available = true;
+                            result.reason = "This domain appears to be available for registration!";
+                        }
+                    } else { 
+                        result.available = false;
+                        let matched_unavailable_flag = null;
+                        for (const flag of overriding_unavailable_flags) {
+                            if (status_flags.has(flag)) {
+                                matched_unavailable_flag = flag;
+                                break;
+                            }
+                        }
+
+                        if (matched_unavailable_flag) {
+                            result.reason = premium_marketed_flags.has(matched_unavailable_flag) ?
+                                "This domain is premium or on the aftermarket." :
+                                "This domain is already registered.";
+                            if (premium_marketed_flags.has(matched_unavailable_flag)) result.is_premium_or_marketed = true;
+                        } else if (status_flags.has('unknown')) {
+                            result.is_inconclusive = true;
+                            result.reason = "The status of this domain could not be determined at this time.";
+                        } else if (status_flags.has('invalid')) {
+                            result.reason = "The domain name entered is invalid.";
+                        } else if (status_flags.has('undelegated') && status_flags.size === 1) { 
+                            result.reason = "This domain is registered but not actively in use (undelegated).";
+                        } else if (!api_status_string && data.status[0].zone) { // Empty status but has zone -> likely available
+                            result.reason = "This domain appears to be available!";
+                            result.available = true; 
+                        } else {
+                             result.reason = "This domain is likely registered or otherwise unavailable.";
+                        }
+                    }
+                } else {
+                    result.reason = "Could not retrieve domain status from API.";
+                    result.api_status_string = "API Response Error";
+                    result.is_inconclusive = true;
+                }
+                return result;
+
+            } catch (error) {
+                console.error(`Domainr Fetch/Processing Error for ${domain}:`, error);
+                let userFriendlyError = "Could not check domain status due to a network or API issue.";
+                if (error.message.includes("API error (429)")) {
+                    userFriendlyError = "Too many requests. Please try again in a moment."
+                }
+                return { 
+                    domain, 
+                    available: false, 
+                    reason: userFriendlyError, 
+                    api_status_string: 'API Error', 
+                    is_inconclusive: true, 
+                    error_details: error.message 
+                };
+            }
+        }
+
+        function displayDomainStatus(domain, result) {
+            const { available, reason, api_status_string, is_premium_or_marketed, is_inconclusive } = result;
+            
+            let statusClass = available ? 'available' : (is_premium_or_marketed ? 'premium' : 'unavailable');
+            let statusIcon = available ? 'fa-check-circle' : (is_premium_or_marketed ? 'fa-gem' : 'fa-times-circle');
+            let statusText = available ? 'is Available!' : (is_premium_or_marketed ? 'is Premium/Marketed' : 'is Not Available');
+            
+            let statusDescription = reason;
+            if (is_inconclusive && available) {
+                statusDescription = "Status check was inconclusive, but it might be available. Please verify with a registrar.";
+            }
+            
+            let html = `
+                <div class="${statusClass}">
+                    <div class="status-icon">
+                        <i class="fas ${statusIcon}"></i>
+                    </div>
+                    <div class="domain-name">${domain}</div>
+                    <div class="status-text">${statusText}</div>
+                    
+                </div>
+            `;
+            
+            domainStatusCard.innerHTML = html;
+        }
+        
+        function displayErrorStatus(domain, errorMessage) {
+            let html = `
+                <div class="unavailable">
+                    <div class="status-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="domain-name">${domain}</div>
+                    <div class="status-text">Check Failed</div>
+                    <p class="status-description">We encountered an error while checking this domain: ${errorMessage}</p>
+                    <div class="status-meta">
+                        Try again in a few moments or check directly with a registrar.
+                    </div>
+                </div>
+            `;
+            
+            domainStatusCard.innerHTML = html;
+        }
+
+        function displayRegistrars(domain) {
+            registrarsList.innerHTML = '';
+            
+            registrars.forEach(registrar => {
+                const searchUrl = registrar.searchUrl ? `${registrar.searchUrl}${encodeURIComponent(domain)}` : `https://${registrar.name.toLowerCase().replace(/\s+/g, '')}.com`;
+                
+                const featuresHtml = registrar.features.map(feature => 
+                    `<span class="registrar-feature"><i class="fas fa-check"></i> ${feature}</span>`
+                ).join('');
+                
+                const li = document.createElement('li');
+                li.className = 'registrar-item';
+                li.innerHTML = `
+                    <img src="${registrar.logo}" alt="${registrar.name}" class="registrar-logo">
+                    <div class="registrar-info">
+                        <div class="registrar-name">${registrar.name}</div>
+                        <div class="registrar-features">
+                            ${featuresHtml}
+                        </div>
+                    </div>
+                    <div class="registrar-action">
+                        <button class="check-price-btn" onclick="window.open('${searchUrl}', '_blank')">
+                            Check Price
+                        </button>
+                    </div>
+                `;
+                
+                registrarsList.appendChild(li);
+            });
+        }
+
+        function generateSuggestions(searchedDomain, isSearchedDomainAvailable) {
+            suggestionsGrid.innerHTML = '';
+            const baseName = searchedDomain.split('.')[0];
+            const currentTld = searchedDomain.substring(searchedDomain.indexOf('.'));
+            
+            // Use a Map to store suggestions, ensuring uniqueness by domain string
+            const suggestionsMap = new Map(); 
+
+            const addSuggestionToMap = (domainStr) => {
+                const lcDomain = domainStr.toLowerCase();
+                // Add if not the original domain and not already in the map
+                if (lcDomain !== searchedDomain.toLowerCase() && !suggestionsMap.has(lcDomain)) {
+                    suggestionsMap.set(lcDomain, { domain: domainStr, status: 'checking' });
+                }
+            };
+
+            // Initial suggestion generation logic (similar to before, but adding to map)
+            if (isSearchedDomainAvailable) {
+                popularTLDs.forEach(tld => {
+                    if (tld.toLowerCase() !== currentTld.toLowerCase()) {
+                        addSuggestionToMap(`${baseName}${tld}`);
+                    }
+                });
+            } else {
+                // If domain is not available, suggest variations
+                popularTLDs.forEach(tld => { 
+                    addSuggestionToMap(`${baseName}${tld}`);
+                });
+                
+                const prefixes = ['my', 'get', 'the', 'go', 'try', 'best'];
+                const suffixes = ['online', 'app', 'web', 'now', 'shop', 'pro'];
+                
+                for (let i = 0; i < 3 && suggestionsMap.size < 15; i++) {
+                    const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+                    if (!baseName.startsWith(prefix)) {
+                        addSuggestionToMap(`${prefix}${baseName}${currentTld}`);
+                    }
+                }
+                
+                for (let i = 0; i < 3 && suggestionsMap.size < 15; i++) {
+                    const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+                    if (!baseName.endsWith(suffix)) {
+                        addSuggestionToMap(`${baseName}${suffix}${currentTld}`);
+                    }
+                }
+            }
+            
+            const desiredSuggestionCount = 15;
+            
+            // Fill up to desiredSuggestionCount if needed with more generic variations
+            const fillPrefixes = ['my', 'get', 'the', 'go', 'try', 'best', 'new', 'your', 'top', 'pro', 'online', 'cool', 'great', 'cloud', 'fast', 'simple', 'web', 'digital'];
+            const fillSuffixes = ['online', 'app', 'web', 'now', 'shop', 'pro', 'hub', 'zone', 'site', 'world', 'store', 'tech', 'co', 'digital', 'space', 'link', 'group', 'live'];
+            let attempts = 0; // Safety counter to prevent infinite loops
+
+            while (suggestionsMap.size < desiredSuggestionCount && attempts < 200) { // Increased attempts for more variety
+                let newSuggestionDomain = "";
+                const randomChoice = Math.random();
+                const randomTldFromPopular = popularTLDs[Math.floor(Math.random() * popularTLDs.length)];
+
+                if (randomChoice < 0.20) { // baseName + random TLD
+                    newSuggestionDomain = `${baseName}${randomTldFromPopular}`;
+                } else if (randomChoice < 0.40) { // prefix + baseName + currentTLD
+                    const prefix = fillPrefixes[Math.floor(Math.random() * fillPrefixes.length)];
+                    newSuggestionDomain = `${prefix}${baseName}${currentTld}`;
+                } else if (randomChoice < 0.60) { // baseName + suffix + currentTLD
+                    const suffix = fillSuffixes[Math.floor(Math.random() * fillSuffixes.length)];
+                    newSuggestionDomain = `${baseName}${suffix}${currentTld}`;
+                } else if (randomChoice < 0.80) { // prefix + baseName + random TLD
+                    const prefix = fillPrefixes[Math.floor(Math.random() * fillPrefixes.length)];
+                    newSuggestionDomain = `${prefix}${baseName}${randomTldFromPopular}`;
+                } else { // baseName + random suffix + random TLD
+                    const suffix = fillSuffixes[Math.floor(Math.random() * fillSuffixes.length)];
+                    newSuggestionDomain = `${baseName}${suffix}${randomTldFromPopular}`;
+                }
+                addSuggestionToMap(newSuggestionDomain);
+                attempts++;
+            }
+            
+            let suggestionsToShow = Array.from(suggestionsMap.values());
+            
+            // Shuffle the generated suggestions and take exactly the desired count
+            suggestionsToShow = suggestionsToShow
+                .sort(() => 0.5 - Math.random()) // Randomize
+                .slice(0, desiredSuggestionCount); // Take the first 15
+            
+            if (suggestionsToShow.length < desiredSuggestionCount) {
+                console.warn(`Could only generate ${suggestionsToShow.length} unique suggestions. Displaying ${suggestionsToShow.length} items.`);
+            }
+            
+            // Display suggestions
+            suggestionsToShow.forEach(suggestion => {
+                let name, ext;
+                const lastDotIndex = suggestion.domain.lastIndexOf('.');
+                if (lastDotIndex > -1 && lastDotIndex < suggestion.domain.length - 1) {
+                    name = suggestion.domain.substring(0, lastDotIndex);
+                    ext = suggestion.domain.substring(lastDotIndex);
+                } else { // Failsafe if a suggestion somehow has no TLD or starts/ends with a dot
+                    name = suggestion.domain;
+                    ext = "";
+                }
+
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.setAttribute('data-domain', suggestion.domain);
+                
+                item.innerHTML = `
+                    <div class="suggestion-domain">
+                        ${name}<span class="suggestion-extension">${ext}</span>
+                    </div>
+                    <div class="suggestion-status">
+                        <i class="fas fa-spinner fa-spin"></i> Checking...
+                    </div>
+                `;
+                
+                item.addEventListener('click', () => {
+                    window.location.href = `results.html?domain=${encodeURIComponent(suggestion.domain)}`;
+                });
+                
+                suggestionsGrid.appendChild(item);
+                
+                // Check availability for each suggestion
+                setTimeout(() => {
+                    checkSuggestionAvailability(suggestion.domain, item);
+                }, 100 + Math.random() * 1000); // Stagger checks slightly
+            });
+        }
+        
+        async function checkSuggestionAvailability(domain, element) {
+            try {
+                // Use Cloudflare DNS to check domain availability
+                const result = await checkWithCloudflare(domain);
+                const statusElement = element.querySelector('.suggestion-status');
+                
+                if (result.available) {
+                    statusElement.innerHTML = '<i class="fas fa-check-circle"></i> Available';
+                    statusElement.classList.add('available');
+                } else {
+                    statusElement.innerHTML = '<i class="fas fa-times-circle"></i> Taken';
+                    statusElement.classList.add('unavailable');
+                }
+            } catch (error) {
+                console.error(`Error checking suggestion ${domain}:`, error);
+                const statusElement = element.querySelector('.suggestion-status');
+                statusElement.innerHTML = '<i class="fas fa-question-circle"></i> Unknown';
+            }
+        }
+    });
+    </script>
+</body>
+</html>

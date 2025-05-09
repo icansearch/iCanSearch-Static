@@ -3,331 +3,946 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iCanSearch - Find and Compare Domain Prices Instantly</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <title>iCanSearch - Find Your Perfect Domain | Fast Domain Name Search</title>
+    <meta name="description" content="Check domain availability instantly and register with your favorite provider. Find the perfect domain name for your business or personal website with iCanSearch.">
+    <meta name="keywords" content="domain search, domain checker, domain availability, domain name search, find domain, register domain, buy domain">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0071e3;
+            --primary-hover: #0077ED;
+            --secondary-color: #1d1d1f;
+            --success-color: #2fd565;
+            --error-color: #ff3b30;
+            --warning-color: #ff9500;
+            --background-color: #fbfbfd;
+            --card-background: #ffffff;
+            --text-color: #1d1d1f;
+            --text-secondary: #86868b;
+            --border-color: #e5e5e7;
+            --border-radius: 16px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        .hero {
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #fbfbfd 0%, #f5f5f7 100%);
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(173, 216, 230, 0.08) 0%, rgba(173, 216, 230, 0) 70%);
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            width: 100%;
+            max-width: 900px;
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #007AFF, #5AC8FA);
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo span {
+            color: var(--text-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color var(--transition-speed) ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .hero-title {
+            font-size: 64px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: 24px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .search-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+        
+        .search-box {
+            display: flex;
+            background-color: var(--card-background);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            position: relative;
+        }
+        
+        .search-box:hover, .search-box:focus-within {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 20px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 20px 20px 20px 60px;
+            border: none;
+            font-size: 18px;
+            outline: none;
+            background: transparent;
+        }
+        
+        .search-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 40px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease;
+            letter-spacing: -0.3px;
+        }
+        
+        .search-button:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .examples {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 60px;
+        }
+        
+        .examples span {
+            display: inline-block;
+            margin: 0 8px;
+            cursor: pointer;
+            transition: color var(--transition-speed) ease;
+        }
+        
+        .examples span:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        
+        .decorative-circles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(84, 58, 183, 0.03) 0%, rgba(0, 172, 193, 0.03) 100%);
+        }
+        
+        .circle-1 { width: 600px; height: 600px; top: -200px; right: -100px; }
+        .circle-2 { width: 400px; height: 400px; bottom: -100px; left: -100px; }
+        .circle-3 { width: 300px; height: 300px; top: 40%; right: 20%; }
+
+        /* Enhanced SEO Content Sections */
+        .intro-section {
+            padding: 80px 20px;
+            text-align: center;
+            background-color: white;
+        }
+        
+        .intro-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .intro-heading {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--text-color);
+        }
+        
+        .intro-text {
+            font-size: 18px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+        
+        .steps-section {
+            padding: 90px 20px;
+            background-color: var(--background-color);
+        }
+        
+        .steps-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .steps-heading {
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+        
+        .step-card {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            transition: transform var(--transition-speed) ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+        
+        .step-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .step-description {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+        
+        .faq-section {
+            padding: 90px 20px;
+            background-color: white;
+        }
+        
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .faq-heading {
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .faq-item {
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 25px;
+        }
+        
+        .faq-question {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .faq-question .icon {
+            transition: transform var(--transition-speed) ease;
+        }
+        
+        .faq-answer {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.7;
+            display: none;
+        }
+        
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        
+        .faq-item.active .faq-question .icon {
+            transform: rotate(180deg);
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            background-color: white;
+        }
+        
+        .section-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+        
+        .section-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 60px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 40px 30px;
+            box-shadow: var(--box-shadow);
+            transition: transform var(--transition-speed) ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        .feature-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .feature-description {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+        
+        .partners {
+            padding: 100px 20px;
+            background-color: #f5f5f7;
+            text-align: center;
+        }
+        
+        .partners-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .partner-logo {
+            height: 95px;
+            width: auto;
+            max-width: 120px;
+            object-fit: contain;
+            opacity: 0.7;
+            transition: opacity var(--transition-speed) ease;
+        }
+        
+        .partner-logo:hover {
+            opacity: 1;
+        }
+        
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .spinner {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .spinner::before, .spinner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            border-top-color: var(--primary-color);
+        }
+        
+        .spinner::before {
+            z-index: 10;
+            animation: spin 1s infinite linear;
+        }
+        
+        .spinner::after {
+            border: 5px solid rgba(0, 113, 227, 0.2);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 60px 20px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-link {
+            margin-bottom: 10px;
+        }
+        
+        .footer-link a {
+            color: #a1a1a6;
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        
+        .footer-link a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 40px;
+            color: #a1a1a6;
+            font-size: 14px;
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 40px; }
+            .hero-subtitle { font-size: 18px; }
+            .search-box { flex-direction: column; }
+            .search-button { padding: 15px; border-radius: 0 0 30px 30px; }
+            .search-input { border-radius: 30px 30px 0 0; }
+            .search-icon { top: 20px; transform: none; }
+            .section-title { font-size: 32px; }
+            .section-subtitle { font-size: 18px; }
+            .navbar { padding: 15px 20px; }
+            .nav-links { display: none; } /* Consider adding a hamburger menu for mobile */
+            .intro-heading, .steps-heading, .faq-heading { font-size: 28px; }
+            .intro-text { font-size: 16px; }
+            .step-title { font-size: 20px; }
+            .faq-question { font-size: 18px; }
+        }
+        
+        /* Mobile menu hamburger */
+        .mobile-menu-button {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--text-color);
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-button { display: block; }
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: var(--card-background);
+                flex-direction: column;
+                padding: 20px;
+                border-top: 1px solid var(--border-color);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                transform: translateY(-150%);
+                transition: transform var(--transition-speed) ease;
+                z-index: 99;
+            }
+            .nav-links.active {
+                transform: translateY(0);
+                display: flex;
+            }
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-color: #0a84ff;
+                --primary-hover: #2590ff;
+                --secondary-color: #1c1c1e;
+                --background-color: #000000;
+                --card-background: #1c1c1e;
+                --text-color: #f5f5f7;
+                --text-secondary: #8E8E93;
+                --border-color: #38383a;
+            }
+            
+            .hero { background: linear-gradient(135deg, #000000 0%, #121212 100%); }
+            .navbar { background-color: rgba(28, 28, 30, 0.7); }
+            .hero-title { background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%); -webkit-background-clip: text;}
+            .intro-section, .features { background-color: #0d0d0d; }
+            .steps-section { background-color: #000000; }
+            .faq-section { background-color: #0d0d0d; }
+            .partners { background-color: #1c1c1e; }
+            .loading { background-color: rgba(0, 0, 0, 0.9); }
+            .step-card, .feature-card { background-color: var(--card-background); }
+            footer { background-color: #121212; }
+        }
+    </style>
 </head>
-
-<style>
-    /* Development Notice Overlay Styles */
-    #development-notice {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background-color: rgba(234, 88, 12, 0.95); /* Orange background */
-        color: white;
-        z-index: 1000;
-        padding: 12px 20px;
-        text-align: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        font-weight: 500;
-    }
-
-    #development-notice a {
-        color: white;
-        text-decoration: underline;
-        font-weight: 700;
-    }
-
-    /* Disable interaction with page elements */
-    #page-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: transparent;
-        z-index: 999; /* Below the notice but above everything else */
-        cursor: not-allowed;
-    }
-
-    /* Make the notice sticky at the top while scrolling */
-    body {
-        padding-top: 60px; /* Adjust based on the height of your notice */
-    }
-</style>
-
 <body>
-    <div id="development-notice">
-        🚧 DEVELOPMENT IN PROGRESS: The iCanSearch.com platform you see is currently being built and is not yet functional. 
-        We're connecting with affiliate partners now to ensure we can offer comprehensive domain and hosting information at launch. 
-        Contact: <a href="mailto:partnerships@icansearch.com">partnerships@icansearch.com</a>
-    </div>
-
-    <div id="page-overlay"></div>
-
-    <div id="app" class="min-h-screen flex flex-col">
-
-    <div id="app" class="min-h-screen flex flex-col">
-        <!-- Header/Navigation -->
-        <header class="bg-white custom-shadow">
-            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-                <!-- Header Logo -->
-                <div class="flex items-center space-x-2">
-                    <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Magnifying glass handle -->
-                        <line x1="20" y1="20" x2="28" y2="28" stroke="#3b82f6" stroke-width="4" stroke-linecap="round"/>
-                        
-                        <!-- Magnifying glass circle with blue fill -->
-                        <circle cx="13" cy="13" r="9" stroke="#3b82f6" stroke-width="2.5" fill="#3b82f6"/>
-                        
-                        <!-- Blue globe with white grid lines (corrected) -->
-                        <ellipse cx="13" cy="13" rx="6" ry="3" stroke="white" stroke-width="1.2" fill="none"/>
-                        <ellipse cx="13" cy="13" rx="3" ry="6" stroke="white" stroke-width="1.2" fill="none"/>
-                        <line x1="13" y1="7" x2="13" y2="19" stroke="white" stroke-width="1.2"/>
-                        <line x1="7" y1="13" x2="19" y2="13" stroke="white" stroke-width="1.2"/>
-                    </svg>
-                    <h1 class="text-xl font-bold text-gray-800">iCanSearch<span class="text-blue-500">.com</span></h1>
-                </div>
-                <nav class="hidden md:block">
-                    <ul class="flex space-x-8">
-                        <li><a href="#" class="text-gray-600 hover:text-blue-500 font-medium">Domains</a></li>
-                        <li><a href="#" class="text-gray-600 hover:text-blue-500 font-medium">Hosting</a></li>
-                        <li><a href="#" class="text-gray-600 hover:text-blue-500 font-medium">About</a></li>
-                        <li><a href="#" class="text-gray-600 hover:text-blue-500 font-medium">Contact</a></li>
-                    </ul>
-                </nav>
-                <div>
-                    <button class="btn-primary text-white px-5 py-2 rounded-full font-medium">Login</button>
-                </div>
-                <div class="md:hidden">
-                    <button class="text-gray-600"><i class="fas fa-bars text-xl"></i></button>
-                </div>
-            </div>
-        </header>
-        
-        <!-- Hero/Search Section -->
-        <section class="search-container py-24 text-white">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-10">
-                    <h2 class="text-3xl md:text-5xl font-bold mb-4">Find Your Perfect Domain Name</h2>
-                    <p class="text-blue-100 text-lg max-w-2xl mx-auto">Search across all major registrars and find the best deals instantly</p>
-                </div>
-                
-                <div class="max-w-3xl mx-auto">
-                    <div class="search-box bg-white rounded-full p-1 flex items-center">
-                        <div class="relative flex-1">
-                            <input 
-                                type="text" 
-                                id="domain-search" 
-                                placeholder="Type your domain name..." 
-                                class="w-full px-6 py-4 rounded-l-full focus:outline-none text-gray-700"
-                                autocomplete="off"
-                            >
-                            <div id="availability-indicator" class="hidden absolute right-3 top-1/2 transform -translate-y-1/2">
-                                <span id="available-badge" class="hidden badge bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full flex items-center">
-                                    <i class="fas fa-check text-green-500 mr-1"></i> Available
-                                </span>
-                                <span id="unavailable-badge" class="hidden bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full flex items-center">
-                                    <i class="fas fa-times text-red-500 mr-1"></i> Unavailable
-                                </span>
-                            </div>
-                        </div>
-                        <button 
-                            id="search-button" 
-                            class="btn-primary text-white px-8 py-4 rounded-r-full font-medium transition flex items-center"
-                        >
-                            <i class="fas fa-search mr-2"></i> Search
-                        </button>
-                    </div>
-                    
-                    <div class="pills-container justify-center">
-                        <span class="pill bg-white bg-opacity-20 text-white">.com</span>
-                        <span class="pill bg-white bg-opacity-20 text-white">.io</span>
-                        <span class="pill bg-white bg-opacity-20 text-white">.net</span>
-                        <span class="pill bg-white bg-opacity-20 text-white">.org</span>
-                        <span class="pill bg-white bg-opacity-20 text-white">.co</span>
-                        <span class="pill bg-white bg-opacity-20 text-white">.app</span>
-                        <span class="pill bg-white bg-opacity-20 text-white">.dev</span>
-                        <span class="pill bg-white bg-opacity-20 text-white">.ai</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Results Section (initially hidden) -->
-        <section id="results-section" class="py-12 hidden">
-            <div class="container mx-auto px-4">
-                <div class="mb-8">
-                    <h3 class="text-2xl font-semibold text-gray-800">Search Results</h3>
-                    <p class="text-gray-600" id="results-count">Showing available domains for "<span id="search-term">example</span>"</p>
-                </div>
-                
-                <div class="grid grid-cols-1 gap-4" id="domains-container">
-                    <!-- Domain cards will be inserted here by JavaScript -->
-                </div>
-            </div>
-        </section>
-        
-        <!-- Features Section -->
-        <section class="py-20 bg-gray-50">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-3">Why Choose iCanSearch?</h2>
-                    <p class="text-gray-600 max-w-2xl mx-auto">The easiest way to find your perfect domain at the best price</p>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-white p-8 rounded-2xl custom-shadow text-center">
-                        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-blue-100 text-blue-500 rounded-full">
-                            <i class="fas fa-bolt text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Real-time Results</h3>
-                        <p class="text-gray-600">Check availability as you type and get instant price comparisons</p>
-                    </div>
-                    
-                    <div class="bg-white p-8 rounded-2xl custom-shadow text-center">
-                        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-blue-100 text-blue-500 rounded-full">
-                            <i class="fas fa-percentage text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Save Up to 70%</h3>
-                        <p class="text-gray-600">Compare prices across dozens of registrars to find the best deals</p>
-                    </div>
-                    
-                    <div class="bg-white p-8 rounded-2xl custom-shadow text-center">
-                        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-blue-100 text-blue-500 rounded-full">
-                            <i class="fas fa-server text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Hosting Comparison</h3>
-                        <p class="text-gray-600">Find the perfect hosting plan to match your new domain</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Testimonials Section -->
-        <section class="py-20 bg-white">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-3">What Our Users Say</h2>
-                    <p class="text-gray-600 max-w-2xl mx-auto">Join thousands of satisfied customers who found their perfect domain</p>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-gray-50 p-8 rounded-2xl">
-                        <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-blue-500 rounded-full text-white flex items-center justify-center mr-4">
-                                <span class="font-bold">JD</span>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">John Doe</h4>
-                                <p class="text-gray-500 text-sm">Startup Founder</p>
-                            </div>
-                        </div>
-                        <div class="text-yellow-400 mb-3">
-                            ★★★★★
-                        </div>
-                        <p class="text-gray-700">"Found my domain in seconds and saved over $50 compared to what I was about to pay. Highly recommended!"</p>
-                    </div>
-                    
-                    <div class="bg-gray-50 p-8 rounded-2xl">
-                        <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-green-500 rounded-full text-white flex items-center justify-center mr-4">
-                                <span class="font-bold">SJ</span>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">Sarah Johnson</h4>
-                                <p class="text-gray-500 text-sm">Web Designer</p>
-                            </div>
-                        </div>
-                        <div class="text-yellow-400 mb-3">
-                            ★★★★★
-                        </div>
-                        <p class="text-gray-700">"I use iCanSearch for all my clients now. It's so much faster than checking multiple registrars individually."</p>
-                    </div>
-                    
-                    <div class="bg-gray-50 p-8 rounded-2xl">
-                        <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-purple-500 rounded-full text-white flex items-center justify-center mr-4">
-                                <span class="font-bold">RM</span>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">Robert Miller</h4>
-                                <p class="text-gray-500 text-sm">E-commerce Owner</p>
-                            </div>
-                        </div>
-                        <div class="text-yellow-400 mb-3">
-                            ★★★★★
-                        </div>
-                        <p class="text-gray-700">"The real-time availability check saved me so much time. I found and purchased the perfect domain in minutes."</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- CTA Section -->
-        <section class="py-20 bg-blue-600 text-white">
-            <div class="container mx-auto px-4 text-center">
-                <h2 class="text-3xl font-bold mb-6">Ready to find your perfect domain?</h2>
-                <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">Start searching now and discover the best deals across all major domain registrars</p>
-                <button class="bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-full font-bold text-lg transition">
-                    Start Searching
-                </button>
-            </div>
-        </section>
-        
-        <!-- Footer -->
-        <footer class="bg-gray-900 text-gray-400 py-16">
-            <div class="container mx-auto px-4">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-                    <div>
-                        <div class="flex items-center space-x-2 mb-6">
-                            <i class="fas fa-search-location text-blue-400 text-2xl"></i>
-                            <h2 class="text-xl font-bold text-white">iCanSearch<span class="text-blue-400">.com</span></h2>
-                        </div>
-                        <p class="text-gray-400 mb-4">The smartest way to find and compare domain names and hosting plans</p>
-                        <div class="flex space-x-4">
-                            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook"></i></a>
-                            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin"></i></a>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-semibold text-white mb-6">Products</h3>
-                        <ul class="space-y-3">
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Domain Search</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Hosting Comparison</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Domain Transfer</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">SSL Certificates</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-semibold text-white mb-6">Company</h3>
-                        <ul class="space-y-3">
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Careers</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-semibold text-white mb-6">Support</h3>
-                        <ul class="space-y-3">
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Cookie Policy</a></li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-500 mb-4 md:mb-0">© 2025 iCanSearch.com. All rights reserved.</p>
-                    <div class="flex items-center">
-                        <img src="/api/placeholder/120/40" alt="Payment methods" class="h-8" />
-                    </div>
-                </div>
-            </div>
-        </footer>
+    <div class="navbar">
+        <div class="logo-container">
+            <div class="logo">iCan<span>Search</span></div>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#how-it-works" class="nav-link">How It Works</a>
+            <a href="#supported-registrars" class="nav-link">Registrars</a>
+            <a href="#faq" class="nav-link">FAQ</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </div>
+        <div class="mobile-menu-button" id="mobileMenuButton">
+            <i class="fas fa-bars"></i>
+        </div>
     </div>
     
-    <!-- JavaScript -->
-    <script src="main.js"></script>
+    <section class="hero">
+        <div class="decorative-circles">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+        </div>
+        
+        <div class="hero-content">
+            <h1 class="hero-title">Find your perfect domain</h1>
+            <p class="hero-subtitle">Check domain availability instantly and register with your favorite provider in just a few clicks.</p>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="domainInput" placeholder="Enter your domain name..." autocomplete="off">
+                    <button class="search-button" id="searchButton">Search</button>
+                </div>
+            </div>
+            
+            <div class="examples">
+                Examples: 
+                <span class="example-domain">yourbrand.com</span> 
+                <span class="example-domain">mycoolapp.io</span> 
+                <span class="example-domain">takenexample.com</span>
+                <span class="example-domain">fixmypdf.net</span>
+                <span class="example-domain">icansearch.ai</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Intro Section for SEO -->
+    <section class="intro-section">
+        <div class="intro-container">
+            <h2 class="intro-heading">The Ultimate Domain Name Search Tool</h2>
+            <p class="intro-text">Finding the perfect domain name is essential for your online presence. iCanSearch helps you verify domain availability across multiple TLDs and offers seamless integration with top domain registrars, making the process quick and hassle-free.</p>
+            <p class="intro-text">With our powerful search engine, you can discover available domains in seconds. Whether you're launching a business website, personal blog, or online store, we'll help you secure the ideal web address that aligns with your brand and goals.</p>
+        </div>
+    </section>
+
+    <!-- How It Works Section for SEO -->
+    <section class="steps-section" id="how-it-works">
+        <div class="steps-container">
+            <h2 class="steps-heading">How iCanSearch Works</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Enter Your Domain</h3>
+                    <p class="step-description">Type your desired domain name in the search box. If you don't include an extension, we'll automatically search for .com availability.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Check Availability</h3>
+                    <p class="step-description">Our system quickly checks domain availability using multiple APIs to ensure accurate results and detailed status information.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Choose a Registrar</h3>
+                    <p class="step-description">If your domain is available, select from our list of trusted domain registrars to complete your purchase with confidence.</p>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+    <section class="features" id="features">
+        <h2 class="section-title">Why choose iCanSearch?</h2>
+        <p class="section-subtitle">The most reliable way to find and register available domains with confidence.</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-bolt feature-icon"></i>
+                <h3 class="feature-title">Instant Checks</h3>
+                <p class="feature-description">Get domain availability results quickly using advanced API checks and real-time verification systems to save you time.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-shield-alt feature-icon"></i>
+                <h3 class="feature-title">Accurate Information</h3>
+                <p class="feature-description">Our multi-layered verification process ensures you get trustworthy domain status results by cross-referencing multiple data sources.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-magic feature-icon"></i>
+                <h3 class="feature-title">Smart Suggestions</h3>
+                <p class="feature-description">Our intelligent algorithm recommends alternative domain options based on your search, helping you find the perfect domain name.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-globe feature-icon"></i>
+                <h3 class="feature-title">Wide TLD Support</h3>
+                <p class="feature-description">Search across hundreds of domain extensions including popular TLDs like .com, .net, .org and newer options like .io, .app, and .ai.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-link feature-icon"></i>
+                <h3 class="feature-title">Direct Registrar Links</h3>
+                <p class="feature-description">Complete your domain registration seamlessly with direct links to trusted domain registrars without any hidden fees.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-code feature-icon"></i>
+                <h3 class="feature-title">Developer Friendly</h3>
+                <p class="feature-description">Get detailed domain status information including availability, registration details, and technical specifications.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section for SEO -->
+    <section class="faq-section" id="faq">
+        <div class="faq-container">
+            <h2 class="faq-heading">Frequently Asked Questions</h2>
+            
+            <div class="faq-item active">
+                <div class="faq-question">
+                    <span>How accurate is iCanSearch for domain availability?</span>
+                    <span class="icon"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    iCanSearch uses multiple API sources and cross-references results to ensure high accuracy. While we strive for 100% accuracy, we recommend verifying final availability with your chosen registrar before completing a purchase, especially for premium domains.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How many domain extensions can I search at once?</span>
+                    <span class="icon"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    iCanSearch lets you search one domain at a time, but we automatically suggest alternative TLDs (Top Level Domains) if your desired domain is unavailable. You can quickly check these suggestions with a single click.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Does iCanSearch sell domains directly?</span>
+                    <span class="icon"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    No, iCanSearch is a domain search tool that connects you with reputable domain registrars. We don't sell domains directly but provide links to trusted registrars where you can complete your purchase with confidence.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What does "premium domain" mean in search results?</span>
+                    <span class="icon"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    Premium domains are high-value domain names that may be priced higher than standard registration fees. These could be short, memorable, or keyword-rich domains that have higher market value. When iCanSearch identifies a premium domain, we'll indicate this in the search results so you can make an informed decision.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Can I search for international domain extensions?</span>
+                    <span class="icon"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    Yes, iCanSearch supports a wide range of international domain extensions including country code top-level domains (ccTLDs) like .uk, .ca, .de, and many others. Simply enter your domain name with the desired extension to check availability.
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="partners" id="supported-registrars"> 
+        <h2 class="section-title">Supported Registrars</h2> 
+        <p class="section-subtitle">We integrate with top domain registrars to provide you with excellent options for domain registration.</p> 
+        
+        <div class="partners-logos">
+            <img src="/godaddy.jpg" alt="GoDaddy Domain Registrar" class="partner-logo">
+            <img src="/namecheap.jpg" alt="Namecheap Domain Services" class="partner-logo">
+            <img src="/hostinger.jpg" alt="Hostinger Domain Registration" class="partner-logo">
+            <img src="/dynadot.png" alt="Dynadot Domain Provider" class="partner-logo">
+            <img src="/bigrock.jpg" alt="BigRock Domain Registration" class="partner-logo">
+            <img src="/namesilo.png" alt="NameSilo Domain Services" class="partner-logo">
+            <img src="/bluehost.jpg" alt="Bluehost Domain Provider" class="partner-logo"> 
+            <img src="/domain.jpg" alt="Domain.com Registration Services" class="partner-logo">
+        </div>
+    </section>
+    
+    <div class="loading" id="loadingIndicator">
+        <div class="spinner"></div>
+        <p class="loading-text">Checking domain availability...</p>
+    </div>
+        
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>iCanSearch</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">About Us</a></li>
+                    <li class="footer-link"><a href="#">Our Team</a></li>
+                    <li class="footer-link"><a href="#">Careers</a></li>
+                    <li class="footer-link"><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Features</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">Domain Search</a></li>
+                    <li class="footer-link"><a href="#">Domain Suggestions</a></li>
+                    <li class="footer-link"><a href="#">Domain Comparison</a></li>
+                    <li class="footer-link"><a href="#">Domain Monitoring</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">Help Center</a></li>
+                    <li class="footer-link"><a href="#">Domain Guide</a></li>
+                    <li class="footer-link"><a href="#">API Documentation</a></li>
+                    <li class="footer-link"><a href="#">Affiliate Program</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">Terms of Service</a></li>
+                    <li class="footer-link"><a href="#">Privacy Policy</a></li>
+                    <li class="footer-link"><a href="#">Cookie Policy</a></li>
+                    <li class="footer-link"><a href="#">GDPR Compliance</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2025 iCanSearch.com • All rights reserved
+        </div>
+    </footer>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const domainInput = document.getElementById('domainInput');
+        const searchButton = document.getElementById('searchButton');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const navLinks = document.getElementById('navLinks');
+        
+        // Mobile menu toggle
+        mobileMenuButton.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking on a nav link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        // FAQ toggles
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const faqItem = this.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+
+        const exampleDomains = document.querySelectorAll('.example-domain');
+
+        exampleDomains.forEach(example => {
+            example.addEventListener('click', () => {
+                domainInput.value = example.textContent.trim();
+                domainInput.focus();
+            });
+        });
+
+        searchButton.addEventListener('click', handleSearch);
+        domainInput.addEventListener('keypress', e => e.key === 'Enter' && handleSearch());
+
+        function handleSearch() {
+            let domain = domainInput.value.trim().toLowerCase();
+            if (!domain) {
+                alert('Please enter a domain name.');
+                return;
+            }
+            
+            // Add .com if no extension is provided
+            if (!domain.includes('.')) domain += '.com';
+            domainInput.value = domain;
+            
+            // Redirect to results page
+            window.location.href = `results.html?domain=${encodeURIComponent(domain)}`;
+        }
+        
+        // Auto-focus the domain input when page loads
+        domainInput.focus();
+    });
+    </script>
 </body>
 </html>
