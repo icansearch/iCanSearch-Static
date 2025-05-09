@@ -49,7 +49,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 60px 20px;
+            padding: 90px 20px;
             background: linear-gradient(135deg, #fbfbfd 0%, #f5f5f7 100%);
             overflow: hidden;
         }
@@ -183,6 +183,7 @@
             font-size: 18px;
             outline: none;
             background: transparent;
+            color: var(--text-color); /* Ensure default text color is set */
         }
         
         .search-button {
@@ -600,7 +601,7 @@
             .mobile-menu-button { display: block; }
             .nav-links {
                 position: fixed;
-                top: 70px;
+                top: 70px; /* Adjusted to match navbar height potentially */
                 left: 0;
                 right: 0;
                 background: var(--card-background);
@@ -641,6 +642,10 @@
             .loading { background-color: rgba(0, 0, 0, 0.9); }
             .step-card, .feature-card { background-color: var(--card-background); }
             footer { background-color: #121212; }
+            .search-input {
+                color: var(--text-color); /* Use --text-color for light text */
+                caret-color: var(--primary-color); /* Use --primary-color for blue cursor */
+            }
         }
     </style>
 </head>
